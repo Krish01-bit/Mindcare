@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chatbot - MindCare</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="chatbot.css">
+</head>
+<body>
+    <div id="chatbot-app"></div>
+    <script src="chatbot.js"></script>
+    <script>
+// Navigation Active Link Handler
+document.addEventListener('DOMContentLoaded', function() {
+    // Get current page filename
+    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    
+    // Get all navigation links
+    const navLinks = document.querySelectorAll('nav ul li a');
+    
+    // Remove active class from all links
+    navLinks.forEach(link => {
+        link.classList.remove('active');
+    });
+    
+    // Add active class to current page link
+    navLinks.forEach(link => {
+        let href = link.getAttribute('href');
+        
+        // Handle root/index cases
+        if ((currentPage === '' || currentPage === 'index.html') && 
+            (href === 'index.html' || href === './')) {
+            link.classList.add('active');
+        } else if (href === currentPage) {
+            link.classList.add('active');
+        }
+    });
+});
+</script>
+</body>
+</html>

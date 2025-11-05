@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - MindCare</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+    <ul>
+        <li><a href="login.html" class="signin-link">Sign In</a></li>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="chatbot.html">Chatbot</a></li>
+        <li><a href="community.html">WhatsApp Community</a></li>
+        <li><a href="premium.html">Premium</a></li>
+        <li><a href="prescription.html">Doctor Prescription</a></li>
+        <li><a href="about.html" class="active">About Us</a></li>
+    </ul>
+</nav>
+
+    <!-- Page Content -->
+    <div class="container">
+        <div class="content-box">
+            <h2>❤️ About MindCare</h2>
+            <p>MindCare was created with a simple but powerful mission: to make mental health support accessible to everyone, anytime, anywhere.</p>
+            
+            <h3 style="color: #667eea; margin-top: 2rem; margin-bottom: 1rem;">Our Mission</h3>
+            <p>We believe that mental health care should be available to everyone without barriers. Our AI-powered platform provides immediate support and guidance to people who are struggling with depression, anxiety, stress, and other mental health challenges.</p>
+
+            <h3 style="color: #667eea; margin-top: 2rem; margin-bottom: 1rem;">Why We Built This</h3>
+            <p>Mental health issues affect millions of people worldwide, but many don't have access to immediate support. Whether it's due to cost, availability, or stigma, too many people suffer in silence. We created MindCare to bridge this gap and provide compassionate, confidential support 24/7.</p>
+
+            <h3 style="color: #667eea; margin-top: 2rem; margin-bottom: 1rem;">Our Approach</h3>
+            <p>We combine advanced AI technology with evidence-based therapeutic techniques to provide meaningful support. Our chatbot is trained to be empathetic, understanding, and non-judgmental. We also connect users with professional mental health services when needed.</p>
+
+            <h3 style="color: #667eea; margin-top: 2rem; margin-bottom: 1rem;">Our Values</h3>
+            <p><strong>Compassion:</strong> We treat every user with empathy and understanding<br>
+               <strong>Privacy:</strong> Your conversations are completely confidential<br>
+               <strong>Accessibility:</strong> Mental health support should be available to everyone<br>
+               <strong>Quality:</strong> We partner with licensed professionals for medical care<br>
+               <strong>Community:</strong> Building supportive connections among users</p>
+
+            <h3 style="color: #667eea; margin-top: 2rem; margin-bottom: 1rem;">Contact Us</h3>
+            <p>Have questions or feedback? We'd love to hear from you.<br>
+               Email: support@mindcare.com<br>
+               Phone: +1 (555) 123-4567</p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p><strong>Crisis Support:</strong> If you're in immediate danger, please call your local emergency services or crisis hotline.</p>
+        <p>&copy; 2024 MindCare. All rights reserved.</p>
+        <p>Remember: You matter, and your feelings are valid.</p>
+    </footer>
+
+<script>
+// Navigation Active Link Handler
+document.addEventListener('DOMContentLoaded', function() {
+    // Get current page filename
+    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    
+    // Get all navigation links
+    const navLinks = document.querySelectorAll('nav ul li a');
+    
+    // Remove active class from all links
+    navLinks.forEach(link => {
+        link.classList.remove('active');
+    });
+    
+    // Add active class to current page link
+    navLinks.forEach(link => {
+        let href = link.getAttribute('href');
+        
+        // Handle root/index cases
+        if ((currentPage === '' || currentPage === 'index.html') && 
+            (href === 'index.html' || href === './')) {
+            link.classList.add('active');
+        } else if (href === currentPage) {
+            link.classList.add('active');
+        }
+    });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+your-project/
+├── index.html
+├── login.html
+├── signup.html
+├── survey.html
+├── chatbot.html          (Updated)
+├── chatbot.js            (New)
+├── chatbot.css           (New)
+├── community.html
+├── premium.html
+├── prescription.html
+├── about.html
+└── style.css

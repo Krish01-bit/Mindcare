@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log In - MindCare</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="auth.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+     <ul>
+        <li><a href="login.html" class="signin-link active">Sign In</a></li>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="chatbot.html">Chatbot</a></li>
+        <li><a href="community.html">WhatsApp Community</a></li>
+        <li><a href="premium.html">Premium</a></li>
+        <li><a href="prescription.html">Doctor Prescription</a></li>
+        <li><a href="about.html">About Us</a></li>
+     </ul>
+    </nav>
+
+    <!-- Login Form -->
+    <div class="auth-container">
+        <div class="auth-box">
+            <h2>Welcome Back</h2>
+            <p class="auth-subtitle">Log in to continue your mental wellness journey</p>
+            
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="loginEmail">Email Address</label>
+                    <input type="email" id="loginEmail" name="loginEmail" required placeholder="your.email@example.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" name="loginPassword" required placeholder="Enter your password">
+                </div>
+
+                <div class="form-group checkbox-group">
+                    <label>
+                        <input type="checkbox" id="remember" name="remember">
+                        Remember me
+                    </label>
+                    <a href="#" class="forgot-link">Forgot password?</a>
+                </div>
+
+                <button type="submit" class="auth-button">Log In</button>
+            </form>
+
+            <p class="auth-footer">
+                Don't have an account? <a href="signup.html">Sign Up</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            // Get form data
+            const loginData = {
+                email: document.getElementById('loginEmail').value,
+                password: document.getElementById('loginPassword').value,
+                remember: document.getElementById('remember').checked,
+                timestamp: new Date().toISOString()
+            };
+
+            // YOUR FRIEND SHOULD ADD DATABASE AUTHENTICATION HERE
+            console.log('Login Data:', loginData);
+            
+            // Check if user has completed survey (this should come from database)
+            // For demo purposes, we'll check localStorage
+            const hasCompletedSurvey = localStorage.getItem('surveyCompleted') === 'true';
+            
+            if (!hasCompletedSurvey) {
+                // First-time login - redirect to survey
+                alert('Welcome! Please complete a brief wellness assessment.');
+                window.location.href = 'survey.html';
+            } else {
+                // Returning user - redirect to chatbot
+                alert('Login successful! Welcome back.');
+                window.location.href = 'chatbot.html';
+            }
+        }
+    </script>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 MindCare. All rights reserved.</p>
+    </footer>
+    <script>
+// Navigation Active Link Handler
+document.addEventListener('DOMContentLoaded', function() {
+    // Get current page filename
+    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    
+    // Get all navigation links
+    const navLinks = document.querySelectorAll('nav ul li a');
+    
+    // Remove active class from all links
+    navLinks.forEach(link => {
+        link.classList.remove('active');
+    });
+    
+    // Add active class to current page link
+    navLinks.forEach(link => {
+        let href = link.getAttribute('href');
+        
+        // Handle root/index cases
+        if ((currentPage === '' || currentPage === 'index.html') && 
+            (href === 'index.html' || href === './')) {
+            link.classList.add('active');
+        } else if (href === currentPage) {
+            link.classList.add('active');
+        }
+    });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium - MindCare</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+    <ul>
+        <li><a href="login.html" class="signin-link">Sign In</a></li>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="chatbot.html">Chatbot</a></li>
+        <li><a href="community.html">WhatsApp Community</a></li>
+        <li><a href="premium.html" class="active">Premium</a></li>
+        <li><a href="prescription.html">Doctor Prescription</a></li>
+        <li><a href="about.html">About Us</a></li>
+    </ul>
+    </nav>
+
+    <!-- Page Content -->
+    <div class="container">
+        <div class="content-box">
+            <h2>⭐ Premium Features</h2>
+            <p>Upgrade to Premium for advanced mental health support and personalized care.</p>
+            
+            <h3 style="color: #667eea; margin-top: 2rem; margin-bottom: 1rem;">What's Included:</h3>
+            <p>✓ Unlimited AI chatbot conversations<br>
+               ✓ Personalized wellness plans<br>
+               ✓ Priority support response<br>
+               ✓ Advanced mood tracking and analytics<br>
+               ✓ Guided meditation and relaxation exercises<br>
+               ✓ Weekly check-ins with AI therapist<br>
+               ✓ Access to premium mental health resources<br>
+               ✓ Ad-free experience</p>
+
+            <h3 style="color: #667eea; margin-top: 2rem; margin-bottom: 1rem;">Pricing Plans:</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
+                <div style="padding: 1.5rem; background: #f5f5f5; border-radius: 10px; text-align: center;">
+                    <h4 style="color: #667eea; margin-bottom: 0.5rem;">Monthly</h4>
+                    <p style="font-size: 2rem; font-weight: bold; color: #667eea;">$9.99</p>
+                    <p style="color: #999;">per month</p>
+                </div>
+                <div style="padding: 1.5rem; background: #667eea; color: white; border-radius: 10px; text-align: center;">
+                    <h4 style="margin-bottom: 0.5rem;">Yearly</h4>
+                    <p style="font-size: 2rem; font-weight: bold;">$99.99</p>
+                    <p>Save 17%</p>
+                </div>
+            </div>
+            
+            <div style="margin-top: 2rem; text-align: center;">
+                <a href="#" class="cta-button">Upgrade to Premium</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p><strong>Crisis Support:</strong> If you're in immediate danger, please call your local emergency services or crisis hotline.</p>
+        <p>&copy; 2024 MindCare. All rights reserved.</p>
+        <p>Remember: You matter, and your feelings are valid.</p>
+    </footer>
+    <script>
+// Navigation Active Link Handler
+document.addEventListener('DOMContentLoaded', function() {
+    // Get current page filename
+    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    
+    // Get all navigation links
+    const navLinks = document.querySelectorAll('nav ul li a');
+    
+    // Remove active class from all links
+    navLinks.forEach(link => {
+        link.classList.remove('active');
+    });
+    
+    // Add active class to current page link
+    navLinks.forEach(link => {
+        let href = link.getAttribute('href');
+        
+        // Handle root/index cases
+        if ((currentPage === '' || currentPage === 'index.html') && 
+            (href === 'index.html' || href === './')) {
+            link.classList.add('active');
+        } else if (href === currentPage) {
+            link.classList.add('active');
+        }
+    });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - MindCare</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="auth.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <ul>
+            <li><a href="login.html" class="signin-link">Sign In</a></li>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="chatbot.html">Chatbot</a></li>
+            <li><a href="community.html">WhatsApp Community</a></li>
+            <li><a href="premium.html">Premium</a></li>
+            <li><a href="prescription.html">Doctor Prescription</a></li>
+            <li><a href="about.html">About Us</a></li>
+        </ul>
+    </nav>
+
+    <!-- Sign Up Form -->
+    <div class="auth-container">
+        <div class="auth-box">
+            <h2>Create Your Account</h2>
+            <p class="auth-subtitle">Join MindCare for personalized mental health support</p>
+            
+            <form id="signupForm" onsubmit="handleSignup(event)">
+                <div class="form-group">
+                    <label for="fullname">Full Name *</label>
+                    <input type="text" id="fullname" name="fullname" required placeholder="Enter your full name">
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address *</label>
+                    <input type="email" id="email" name="email" required placeholder="your.email@example.com">
+                    <small>A verification email will be sent to this address</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password *</label>
+                    <input type="password" id="password" name="password" required minlength="8" placeholder="Minimum 8 characters">
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password *</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="Re-enter your password">
+                </div>
+
+                <div class="form-group">
+                    <label for="age">Age *</label>
+                    <input type="number" id="age" name="age" required min="13" max="120" placeholder="Your age">
+                </div>
+
+                <div class="form-group">
+                    <label for="employmentStatus">Employment Status *</label>
+                    <select id="employmentStatus" name="employmentStatus" required>
+                        <option value="">Select your status</option>
+                        <option value="student">Student</option>
+                        <option value="employed">Employed</option>
+                        <option value="self-employed">Self-Employed</option>
+                        <option value="unemployed">Currently Unemployed</option>
+                        <option value="retired">Retired</option>
+                        <option value="homemaker">Homemaker</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group checkbox-group">
+                    <label>
+                        <input type="checkbox" id="terms" name="terms" required>
+                        I agree to the <a href="#">Terms & Conditions</a> and <a href="#">Privacy Policy</a>
+                    </label>
+                </div>
+
+                <button type="submit" class="auth-button">Create Account</button>
+            </form>
+
+            <p class="auth-footer">
+                Already have an account? <a href="login.html">Log In</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function handleSignup(event) {
+            event.preventDefault();
+            
+            // Get form data
+            const formData = {
+                fullname: document.getElementById('fullname').value,
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value,
+                confirmPassword: document.getElementById('confirmPassword').value,
+                age: document.getElementById('age').value,
+                employmentStatus: document.getElementById('employmentStatus').value,
+                timestamp: new Date().toISOString()
+            };
+
+            // Validate passwords match
+            if (formData.password !== formData.confirmPassword) {
+                alert('Passwords do not match. Please try again.');
+                return;
+            }
+
+            // YOUR FRIEND SHOULD ADD DATABASE CODE HERE
+            console.log('Sign Up Data:', formData);
+            
+            // Send verification email (backend required)
+            // sendVerificationEmail(formData.email);
+            
+            alert('Account created successfully! Please check your email for verification link. You can now log in.');
+            
+            // Redirect to login
+            window.location.href = 'login.html';
+        }
+    </script>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 MindCare. All rights reserved.</p>
+    </footer>
+    <script>
+// Navigation Active Link Handler
+document.addEventListener('DOMContentLoaded', function() {
+    // Get current page filename
+    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    
+    // Get all navigation links
+    const navLinks = document.querySelectorAll('nav ul li a');
+    
+    // Remove active class from all links
+    navLinks.forEach(link => {
+        link.classList.remove('active');
+    });
+    
+    // Add active class to current page link
+    navLinks.forEach(link => {
+        let href = link.getAttribute('href');
+        
+        // Handle root/index cases
+        if ((currentPage === '' || currentPage === 'index.html') && 
+            (href === 'index.html' || href === './')) {
+            link.classList.add('active');
+        } else if (href === currentPage) {
+            link.classList.add('active');
+        }
+    });
+});
+</script>
+</body>
+</html>

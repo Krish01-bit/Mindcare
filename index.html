@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindCare - AI Mental Health Support</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Navigation -->
+   <nav>
+    <ul>
+        <li><a href="login.html" class="signin-link">Sign In</a></li>
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="chatbot.html">Chatbot</a></li>
+        <li><a href="community.html">WhatsApp Community</a></li>
+        <li><a href="premium.html">Premium</a></li>
+        <li><a href="prescription.html">Doctor Prescription</a></li>
+        <li><a href="about.html">About Us</a></li>
+    </ul>
+   </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Welcome to MindCare</h1>
+        <p>Your AI companion for mental wellness. We're here to listen, support, and guide you through difficult times.</p>
+        <a href="signup.html" class="cta-button">Get Started - Sign Up Free</a>
+    </section>
+
+    <!-- Support Message -->
+    <div class="support-text">
+        <p><strong>You are not alone.</strong> Whether you're feeling down, anxious, or just need someone to talk to, we're here for you 24/7. Your mental health matters, and taking this step shows incredible strength.</p>
+    </div>
+
+    <!-- Features Section -->
+    <div class="features">
+        <!-- AI Chatbot Box -->
+        <a href="chatbot.html" class="feature-card" style="text-decoration: none; color: inherit;">
+            <div class="icon">💬</div>
+            <h3>AI Chatbot</h3>
+            <p>Talk to our empathetic AI companion anytime, anywhere. Get instant support and guidance when you need it most.</p>
+            <small style="color: #667eea; font-weight: 600;">→ Start Chatting</small>
+        </a>
+
+        <!-- WhatsApp Community Box -->
+        <a href="community.html" class="feature-card" style="text-decoration: none; color: inherit;">
+            <div class="icon">👥</div>
+            <h3>WhatsApp Community</h3>
+            <p>Join our supportive community of individuals who understand. Share experiences, find comfort, and build connections.</p>
+            <small style="color: #667eea; font-weight: 600;">→ Join Community</small>
+        </a>
+
+        <!-- Premium Features Box -->
+        <a href="premium.html" class="feature-card" style="text-decoration: none; color: inherit;">
+            <div class="icon">⭐</div>
+            <h3>Premium Features</h3>
+            <p>Unlock advanced AI capabilities, personalized wellness plans, and priority support for your mental health journey.</p>
+            <small style="color: #667eea; font-weight: 600;">→ Upgrade Now</small>
+        </a>
+
+        <!-- Doctor Prescription Box -->
+        <a href="prescription.html" class="feature-card" style="text-decoration: none; color: inherit;">
+            <div class="icon">🏥</div>
+            <h3>Doctor Prescription</h3>
+            <p>Connect with licensed mental health professionals. Get proper diagnosis and treatment when you need professional care.</p>
+            <small style="color: #667eea; font-weight: 600;">→ Book Appointment</small>
+        </a>
+
+        <!-- About Us Box -->
+        <a href="about.html" class="feature-card" style="text-decoration: none; color: inherit;">
+            <div class="icon">❤️</div>
+            <h3>About Us</h3>
+            <p>We're dedicated to making mental health support accessible to everyone. Our mission is to provide immediate, compassionate care.</p>
+            <small style="color: #667eea; font-weight: 600;">→ Learn More</small>
+        </a>
+
+        <!-- Safe & Confidential Box -->
+        <div class="feature-card" style="cursor: default;">
+            <div class="icon">🔒</div>
+            <h3>Safe & Confidential</h3>
+            <p>Your privacy is our priority. All conversations are encrypted and completely confidential. You can share freely.</p>
+            <small style="color: #999; font-weight: 600;">✓ Protected</small>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p><strong>Crisis Support:</strong> If you're in immediate danger, please call your local emergency services or crisis hotline.</p>
+        <p>&copy; 2024 MindCare. All rights reserved.</p>
+        <p>Remember: You matter, and your feelings are valid.</p>
+    </footer>
+
+    <style>
+        /* Make feature cards clickable */
+        .feature-card {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px) !important;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.2) !important;
+        }
+
+        .feature-card small {
+            display: inline-block;
+            margin-top: 0.5rem;
+        }
+    </style>
+    <script>
+// Navigation Active Link Handler
+document.addEventListener('DOMContentLoaded', function() {
+    // Get current page filename
+    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    
+    // Get all navigation links
+    const navLinks = document.querySelectorAll('nav ul li a');
+    
+    // Remove active class from all links
+    navLinks.forEach(link => {
+        link.classList.remove('active');
+    });
+    
+    // Add active class to current page link
+    navLinks.forEach(link => {
+        let href = link.getAttribute('href');
+        
+        // Handle root/index cases
+        if ((currentPage === '' || currentPage === 'index.html') && 
+            (href === 'index.html' || href === './')) {
+            link.classList.add('active');
+        } else if (href === currentPage) {
+            link.classList.add('active');
+        }
+    });
+});
+</script>
+</body>
+</html>
