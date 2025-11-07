@@ -1,0 +1,208 @@
+============================================
+FILE 1: requirements.txt
+Location: mindcare/backend/requirements.txt
+Purpose: Python packages to install
+============================================
+
+Flask==2.3.0
+Flask-CORS==4.0.0
+Flask-SQLAlchemy==3.0.5
+PyMySQL==1.1.0
+cryptography==41.0.0
+PyJWT==2.8.0
+python-dotenv==1.0.0
+google-generativeai==0.3.0
+requests==2.31.0
+werkzeug==2.3.0
+
+
+============================================
+FILE 2: .env
+Location: mindcare/backend/.env
+Purpose: Configuration and secret keys
+Important: Filename starts with a DOT (.)
+============================================
+
+# ============================================
+# DATABASE CONFIGURATION
+# ============================================
+DB_HOST=localhost
+DB_PORT=3306
+DB_USER=mindcare_user
+DB_PASSWORD=mindcare_password
+DB_NAME=mindcare_db
+
+# ============================================
+# FLASK CONFIGURATION
+# ============================================
+SECRET_KEY=your-super-secret-key-12345-change-this-min-32-characters-12345
+FLASK_ENV=development
+FLASK_DEBUG=True
+
+# ============================================
+# AI API KEYS (Optional - app works without)
+# ============================================
+GEMINI_API_KEY=paste_your_gemini_api_key_here_from_makersuite.google.com
+HF_API_TOKEN=paste_your_huggingface_token_here_from_huggingface.co
+HF_MODEL=mistralai/Mistral-7B-Instruct-v0.2
+
+# ============================================
+# SERVER CONFIGURATION
+# ============================================
+FLASK_RUN_HOST=0.0.0.0
+FLASK_RUN_PORT=5000
+
+
+============================================
+HOW TO USE THESE FILES
+============================================
+
+1. COPY requirements.txt:
+   - Create new file in backend folder
+   - Save as: mindcare/backend/requirements.txt
+   - Install with: pip install -r requirements.txt
+
+2. COPY .env:
+   - Create new file in backend folder
+   - Save as: mindcare/backend/.env
+   - IMPORTANT: Must start with a dot (.)
+   - Never commit this file to Git
+   - Update with your actual credentials
+
+
+============================================
+WHERE TO GET API KEYS
+============================================
+
+GEMINI API KEY:
+  1. Go to: https://makersuite.google.com/app/apikey
+  2. Sign in with Google
+  3. Click "Create API Key"
+  4. Copy the key
+  5. Paste in .env as GEMINI_API_KEY
+
+HUGGINGFACE TOKEN:
+  1. Go to: https://huggingface.co/settings/tokens
+  2. Sign in or create account
+  3. Click "New token"
+  4. Name it "MindCare"
+  5. Select "Read" access
+  6. Copy token
+  7. Paste in .env as HF_API_TOKEN
+
+
+============================================
+DATABASE CREDENTIALS
+============================================
+
+Default values (if you followed the guide):
+  DB_HOST=localhost
+  DB_PORT=3306
+  DB_USER=mindcare_user
+  DB_PASSWORD=mindcare_password
+  DB_NAME=mindcare_db
+
+If you used different values, update them here.
+
+
+============================================
+INSTALLATION STEPS
+============================================
+
+1. Create backend folder:
+   mkdir backend
+
+2. Create requirements.txt:
+   - Copy text from above
+   - Save as: backend/requirements.txt
+
+3. Create .env:
+   - Copy text from above
+   - Save as: backend/.env
+
+4. Create Python virtual environment:
+   cd backend
+   python -m venv venv
+
+5. Activate virtual environment:
+   source venv/bin/activate          (macOS/Linux)
+   # OR
+   venv\Scripts\activate             (Windows)
+
+6. Install Python packages:
+   pip install -r requirements.txt
+
+7. Verify installation:
+   pip list
+
+8. Copy app.py:
+   - Copy from artifact: "MindCare - Enhanced Backend"
+   - Save as: backend/app.py
+
+9. Run backend:
+   python app.py
+
+Expected output:
+  ✅ Database tables created successfully
+  ✅ MindCare Backend Starting...
+  ✅ Running on http://localhost:5000
+
+
+============================================
+WHAT EACH PACKAGE DOES
+============================================
+
+Flask==2.3.0
+  → Web framework for building the server
+
+Flask-CORS==4.0.0
+  → Allows frontend to connect to backend
+
+Flask-SQLAlchemy==3.0.5
+  → Database connection and ORM
+
+PyMySQL==1.1.0
+  → MySQL driver for Python
+
+cryptography==41.0.0
+  → Encrypts sensitive data
+
+PyJWT==2.8.0
+  → Creates JWT tokens for authentication
+
+python-dotenv==1.0.0
+  → Loads .env file variables
+
+google-generativeai==0.3.0
+  → Google Gemini AI integration
+
+requests==2.31.0
+  → Makes HTTP requests to APIs
+
+werkzeug==2.3.0
+  → Password hashing and security
+
+
+============================================
+TROUBLESHOOTING
+============================================
+
+Error: "No module named 'flask'"
+  → Solution: pip install -r requirements.txt
+
+Error: "Can't connect to MySQL"
+  → Check: MySQL is running
+  → Check: .env has correct DB credentials
+
+Error: "API key not found"
+  → Get from: makersuite.google.com/app/apikey
+  → Paste in: .env as GEMINI_API_KEY
+
+Error: ".env file not found"
+  → Make sure filename starts with a dot: .env
+  → Put it in: backend/ folder
+
+
+============================================
+END OF CONFIGURATION
+============================================
