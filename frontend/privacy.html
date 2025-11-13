@@ -4,17 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Privacy Policy - MindCare</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif !important; }
-        .content-box h2 {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+        .content-box h2 { display: flex; align-items: center; gap: 10px; }
     </style>
 </head>
 <body>
@@ -26,7 +22,6 @@
         <li><a href="premium.html">Premium</a></li>
         <li><a href="prescription.html">Doctor Prescription</a></li>
         <li><a href="about.html">About Us</a></li>
-
         <li class="nav-button-container">
             <a href="login.html" class="nav-button login">Log In</a>
             <a href="signup.html" class="nav-button signup">Sign Up</a>
@@ -38,20 +33,16 @@
         <div class="content-box">
             <h2>Privacy Policy</h2>
             <p>Last updated: November 13, 2025</p>
-
             <p>MindCare ("us", "we", or "our") operates the MindCare application (the "Service"). This page informs you of our policies regarding the collection, use, and disclosure of personal data when you use our Service and the choices you have associated with that data.</p>
             <p>We use your data to provide and improve the Service. By using the Service, you agree to the collection and use of information in accordance with this policy.</p>
-
             <h3 style="color: #667eea; margin-top: 2rem; margin-bottom: 1rem;">1. Information Collection and Use</h3>
             <p>We collect several different types of information for various purposes to provide and improve our Service to you.</p>
-            
             <h4>Types of Data Collected</h4>
             <ul>
                 <li><strong>Personal Data:</strong> While using our Service, we may ask you to provide us with certain personally identifiable information that can be used to contact or identify you ("Personal Data"). This includes, but is not limited to: Email address, Full Name, Age, Employment Status, Survey Responses.</li>
                 <li><strong>Chat Data:</strong> We collect and securely store the content of your conversations with the AI chatbot to provide you with your chat history and to improve our service. This data is encrypted.</li>
                 <li><strong>Emotion Data:</strong> Our emotion detection feature runs <strong>entirely on your device</strong> (in your browser). We do not receive, store, or transmit any images or video from your camera. We only receive the final, anonymous emotion data (e.g., "happy", "sad") to log your mood and personalize the chat.</li>
             </ul>
-
             <h3 style="color: #667eea; margin-top: 2rem; margin-bottom: 1rem;">2. Use of Data</h3>
             <p>MindCare uses the collected data for various purposes:</p>
             <ul>
@@ -62,17 +53,13 @@
                 <li>To monitor the usage of the Service</li>
                 <li>To detect, prevent and address technical issues</li>
             </ul>
-
             <h3 style="color: #667eea; margin-top: 2rem; margin-bottom: 1rem;">3. Data Storage and Security</h3>
             <p>The security of your data is extremely important to us. All chat history and personal data are stored in our encrypted database. We take all reasonable steps to protect your information, but remember that no method of transmission over the Internet or method of electronic storage is 100% secure.</p>
             <p>As stated above, **no video or images from your camera ever leave your device.**</p>
-
             <h3 style="color: #667eea; margin-top: 2rem; margin-bottom: 1rem;">4. Children's Privacy</h3>
             <p>Our Service does not address anyone under the age of 13. We do not knowingly collect personally identifiable information from anyone under the age of 13. If you are a parent or guardian and you are aware that your child has provided us with Personal Data, please contact us.</p>
-
             <h3 style="color: #667eea; margin-top: 2rem; margin-bottom: 1rem;">5. Changes to This Privacy Policy</h3>
             <p>We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page. You are advised to review this Privacy Policy periodically for any changes.</p>
-
             <h3 style="color: #667eea; margin-top: 2rem; margin-bottom: 1rem;">7. Contact Us</h3>
             <p>If you have any questions about this Privacy Policy, You can contact us:<br>
                Email: support@mindcare.com</p>
@@ -80,18 +67,29 @@
     </div>
 
     <footer>
-        <p>&copy; 2024 MindCare. All rights reserved.</p>
-    </footer>
+        <p>© 2025 XP Hunters. All rights reserved.</p>
+        </footer>
 
 <script>
-// Navigation Active Link Handler
-document.addEventListener('DOMContentLoaded', function() {
-    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-    const navLinks = document.querySelectorAll('nav ul li a');
-    navLinks.forEach(link => {
-        link.classList.remove('active');
+    function globalLogout() {
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('currentUser');
+        window.location.href = 'index.html'; 
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+        const authToken = localStorage.getItem('authToken');
+        const navLinks = document.querySelectorAll('nav ul li a');
+        if (authToken) {
+            const navButtonContainer = document.querySelector('.nav-button-container');
+            if (navButtonContainer) {
+                navButtonContainer.innerHTML = '<a href="#" onclick="globalLogout()" class="nav-button login">Log Out</a>';
+            }
+        }
+        const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+        });
     });
-});
 </script>
 </body>
 </html>

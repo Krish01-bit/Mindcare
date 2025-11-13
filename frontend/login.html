@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Log In - MindCare</title>
-    <link rel="stylesheet" href="style.css"> 
-    <link rel="stylesheet" href="auth.css">
+    <link rel="stylesheet" href="css/style.css"> 
+    <link rel="stylesheet" href="css/auth.css">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,32 +13,10 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
 
     <style>
-        /* Apply Font & Icon Styles */
-        body {
-            font-family: 'Inter', sans-serif !important;
-        }
-        .material-symbols-rounded {
-          font-variation-settings:
-          'FILL' 0,
-          'wght' 400,
-          'GRAD' 0,
-          'opsz' 24;
-          font-size: 20px;
-          vertical-align: middle;
-          margin-right: 4px;
-        }
-        .form-group label {
-            display: flex;
-            align-items: center;
-        }
-        .error-message {
-            background-color: #fee2e2;
-            color: #ef4444;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 14px;
-            margin-bottom: 16px;
-        }
+        body { font-family: 'Inter', sans-serif !important; }
+        .material-symbols-rounded { font-size: 20px; vertical-align: middle; margin-right: 4px; }
+        .form-group label { display: flex; align-items: center; }
+        .error-message { background-color: #fee2e2; color: #ef4444; padding: 12px; border-radius: 8px; font-size: 14px; margin-bottom: 16px; }
     </style>
 </head>
 <body>
@@ -52,9 +30,10 @@
         <li><a href="about.html">About Us</a></li>
 
         <li class="nav-button-container">
-            <a href="login.html" class="nav-button login active">Log In</a> <a href="signup.html" class="nav-button signup">Sign Up</a>
+            <a href="login.html" class="nav-button login active">Log In</a> 
+            <a href="signup.html" class="nav-button signup">Sign Up</a>
         </li>
-        </ul>
+     </ul>
     </nav>
 
     <div class="auth-container">
@@ -64,17 +43,14 @@
             
             <form id="loginForm" onsubmit="handleLogin(event)">
                 <div id="loginError" class="error-message" style="display: none;"></div>
-
                 <div class="form-group">
                     <label for="loginEmail"><span class="material-symbols-rounded">mail</span>Email Address</label>
                     <input type="email" id="loginEmail" name="loginEmail" required placeholder="your.email@example.com">
                 </div>
-
                 <div class="form-group">
                     <label for="loginPassword"><span class="material-symbols-rounded">lock</span>Password</label>
                     <input type="password" id="loginPassword" name="loginPassword" required placeholder="Enter your password">
                 </div>
-
                 <div class="form-group checkbox-group">
                     <label>
                         <input type="checkbox" id="remember" name="remember">
@@ -82,10 +58,8 @@
                     </label>
                     <a href="#" class="forgot-link">Forgot password?</a>
                 </div>
-
                 <button type="submit" class="auth-button" id="loginButton">Log In</button>
             </form>
-
             <p class="auth-footer">
                 Don't have an account? <a href="signup.html">Sign Up</a>
             </p>
@@ -93,7 +67,7 @@
     </div>
 
     <script>
-        const API_URL = 'http://localhost:5000'; // Your backend URL
+        const API_URL = 'http://localhost:5000'; 
 
         async function handleLogin(event) {
             event.preventDefault();
@@ -110,9 +84,7 @@
             try {
                 const response = await fetch(`${API_URL}/user/login`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password })
                 });
 
@@ -132,7 +104,7 @@
                 if (data.survey_needed) {
                     window.location.href = 'survey.html';
                 } else {
-                    window.location.href = 'chatbot.html';
+                    window.location.href = 'index.html'; 
                 }
 
             } catch (err) {
@@ -145,26 +117,38 @@
     </script>
 
     <footer>
-        <p>&copy; 2024 MindCare. All rights reserved.</p>
-    </footer>
+        <p>© 2025 XP Hunters. All rights reserved.</p>
+        </footer>
+    
     <script>
-// Navigation Active Link Handler
-document.addEventListener('DOMContentLoaded', function() {
-    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-    const navLinks = document.querySelectorAll('nav ul li a');
-    navLinks.forEach(link => {
-        link.classList.remove('active');
-    });
-    navLinks.forEach(link => {
-        let href = link.getAttribute('href');
-        if ((currentPage === '' || currentPage === 'index.html') && 
-            (href === 'index.html' || href === './')) {
-            link.classList.add('active');
-        } else if (href === currentPage) {
-            link.classList.add('active');
+        function globalLogout() {
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('currentUser');
+            window.location.href = 'index.html'; 
         }
-    });
-});
-</script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const authToken = localStorage.getItem('authToken');
+            const navLinks = document.querySelectorAll('nav ul li a');
+            if (authToken) {
+                const navButtonContainer = document.querySelector('.nav-button-container');
+                if (navButtonContainer) {
+                    navButtonContainer.innerHTML = '<a href="#" onclick="globalLogout()" class="nav-button login">Log Out</a>';
+                }
+            }
+            const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+            });
+            navLinks.forEach(link => {
+                let href = link.getAttribute('href');
+                if ((currentPage === '' || currentPage === 'index.html') && 
+                    (href === 'index.html' || href === './')) {
+                    link.classList.add('active');
+                } else if (href === currentPage) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
 </body>
 </html>

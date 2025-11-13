@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Community - MindCare</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6; color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        nav {
+            background: rgba(255, 255, 255, 0.95); padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000;
+        }
+        nav ul {
+            list-style: none; display: flex; align-items: center; flex-wrap: wrap;
+            gap: 2rem; justify-content: space-between;
+        }
+        nav ul li a {
+            text-decoration: none; color: #667eea; font-weight: 600;
+            transition: all 0.3s ease; font-size: 1.1rem; padding-bottom: 0.5rem;
+            border-bottom: 3px solid transparent;
+        }
+        nav ul li a:hover { color: #764ba2; border-bottom-color: #764ba2; }
+        nav ul li a.active { color: #764ba2; border-bottom: 3px solid #667eea; font-weight: 700; }
+        .nav-button-container { display: flex; gap: 0.25rem; }
+        .nav-button {
+            display: inline-block; padding: 0.4rem 1.1rem; border-radius: 25px;
+            text-decoration: none; font-weight: 600; font-size: 0.9rem;
+            transition: all 0.2s ease; border: 2px solid transparent; line-height: 1.5;
+        }
+        .nav-button.login {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white; border-color: #667eea;
+        }
+        .nav-button.login:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        .nav-button.signup {
+            background: rgba(255, 255, 255, 0.9); color: #4f46e5;
+            border: 2px solid #667eea;
+        }
+        .nav-button.signup:hover { background: #ffffff; }
+        nav ul li a.signin-link { display: none; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 3rem 2rem; }
+        .content-box {
+            background: white; padding: 3rem; border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1); margin-bottom: 2rem;
+        }
+        .content-box h2 { color: #667eea; font-size: 2rem; margin-bottom: 1.5rem; }
+        .content-box h3 { color: #667eea; margin-top: 2rem; margin-bottom: 1rem; }
+        .content-box p { color: #666; line-height: 1.8; margin-bottom: 1rem; }
+        .whatsapp-join-section {
+            margin-top: 3rem; padding: 2.5rem;
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+            border-radius: 20px; text-align: center;
+            box-shadow: 0 10px 30px rgba(37, 211, 102, 0.3);
+            position: relative; overflow: hidden;
+        }
+        .whatsapp-join-section::before {
+            content: ''; position: absolute; top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: pulse 3s ease-in-out infinite;
+        }
+        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.5; } 50% { transform: scale(1.1); opacity: 0.8; } }
+        .whatsapp-icon-wrapper {
+            position: relative; display: inline-block; margin-bottom: 1.5rem;
+            animation: bounce 2s ease-in-out infinite;
+        }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        .whatsapp-icon { font-size: 5rem; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2)); }
+        .whatsapp-join-section h3 {
+            color: white; font-size: 2rem; margin: 0 0 1rem 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2); position: relative; z-index: 1;
+        }
+        .whatsapp-join-section p {
+            color: rgba(255,255,255,0.95); font-size: 1.1rem;
+            margin-bottom: 2rem; position: relative; z-index: 1;
+        }
+        .whatsapp-button {
+            display: inline-flex; align-items: center; gap: 1rem; padding: 1.25rem 3rem;
+            background: white; color: #25D366; text-decoration: none; border-radius: 50px;
+            font-weight: bold; font-size: 1.2rem; transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2); position: relative; z-index: 1;
+        }
+        .whatsapp-button:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3); background: #f0f0f0;
+        }
+        .whatsapp-button-icon { font-size: 1.8rem; }
+        
+        /* === UPDATED: Community Stats Alignment === */
+        .community-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+            position: relative;
+            z-index: 1;
+            justify-content: center; /* This will center the 2 remaining items */
+        }
+        /* ======================================== */
+
+        .stat-item {
+            background: rgba(255,255,255,0.2); padding: 1.5rem; border-radius: 15px;
+            backdrop-filter: blur(10px); border: 2px solid rgba(255,255,255,0.3);
+            min-width: 150px; /* Ensure they have a minimum width */
+        }
+        .stat-number {
+            font-size: 2rem; font-weight: bold; color: white;
+            display: block; margin-bottom: 0.5rem;
+        }
+        .stat-label { color: rgba(255,255,255,0.9); font-size: 0.9rem; }
+        footer {
+            background: rgba(255, 255, 255, 0.95); text-align: center;
+            padding: 2rem; margin-top: 3rem; color: #666;
+        }
+        footer p { margin-bottom: 0.5rem; }
+        footer p strong { color: #667eea; }
+        @media (max-width: 768px) {
+            .whatsapp-join-section { padding: 2rem 1.5rem; }
+            .whatsapp-join-section h3 { font-size: 1.5rem; }
+            .whatsapp-button { padding: 1rem 2rem; font-size: 1rem; }
+            .community-stats { grid-template-columns: 1fr 1fr; }
+            .nav-button-container {
+                flex-direction: column; width: 100%; text-align: center;
+                gap: 0.5rem; margin-top: 1rem;
+            }
+            .nav-button { font-size: 0.9rem; padding: 0.5rem 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="chatbot.html">Chatbot</a></li>
+            <li><a href="community.html" class="active">WhatsApp Community</a></li>
+            <li><a href="premium.html">Premium</a></li>
+            <li><a href="prescription.html">Doctor Prescription</a></li>
+            <li><a href="about.html">About Us</a></li>
+
+            <li class="nav-button-container">
+                <a href="login.html" class="nav-button login">Log In</a>
+                <a href="signup.html" class="nav-button signup">Sign Up</a>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <div class="content-box">
+            <h2>💥 WhatsApp Community</h2>
+            <p>Join our supportive WhatsApp community where you can connect with others who understand what you're going through.</p>
+            
+            <h3>Community Benefits:</h3>
+            <p>✓ Connect with people facing similar challenges<br>
+               ✓ Share your experiences in a safe environment<br>
+               ✓ Get peer support and encouragement<br>
+               ✓ Daily motivational messages and tips<br>
+               ✓ Moderated by mental health professionals</p>
+
+            <h3>Community Guidelines:</h3>
+            <p>• Be respectful and kind to all members<br>
+               • Maintain confidentiality<br>
+               • No spam or promotional content<br>
+               • Support each other positively</p>
+            
+            <div class="whatsapp-join-section">
+                <div class="whatsapp-icon-wrapper">
+                    <div class="whatsapp-icon">💬</div>
+                </div>
+                <h3>Join Our Supportive Community Today!</h3>
+                <p>Connect with members who support each other on their mental wellness journey</p>
+                
+                <a href="https://chat.whatsapp.com/I3kUCH4idI03Zs4nRFBaOl?mode=wwt" class="whatsapp-button" target="_blank">
+                    <span class="whatsapp-button-icon">📱</span>
+                    <span>Join WhatsApp Community</span>
+                </a>
+
+                <div class="community-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">24/7</span>
+                        <span class="stat-label">Support Available</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">100%</span>
+                        <span class="stat-label">Confidential</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p><strong>Crisis Support:</strong> If you're in immediate danger, please call your local emergency services or crisis hotline.</p>
+        <p>© 2025 XP Hunters. All rights reserved.</p>
+        <p>Remember: You matter, and your feelings are valid.</p>
+    </footer>
+
+    <script>
+        function globalLogout() {
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('currentUser');
+            window.location.href = 'index.html'; 
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            const authToken = localStorage.getItem('authToken');
+            const navLinks = document.querySelectorAll('nav ul li a');
+            
+            if (authToken) {
+                const navButtonContainer = document.querySelector('.nav-button-container');
+                if (navButtonContainer) {
+                    navButtonContainer.innerHTML = '<a href="#" onclick="globalLogout()" class="nav-button login">Log Out</a>';
+                }
+            }
+
+            const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            navLinks.forEach(link => {
+                let href = link.getAttribute('href');
+                
+                if ((currentPage === '' || currentPage === 'index.html') && 
+                    (href === 'index.html' || href === './')) {
+                    link.classList.add('active');
+                } else if (href === currentPage) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

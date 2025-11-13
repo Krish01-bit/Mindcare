@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Chatbot - MindCare</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -84,134 +84,6 @@
     .loading-spinner p {
         color: white;
         font-weight: 600;
-    }
-
-    /* Auth Container */
-    .auth-container {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 100vh;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    }
-
-    .auth-page {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 100vh;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    }
-
-    .auth-card {
-        background: var(--bg-white);
-        border-radius: 16px;
-        padding: 48px;
-        max-width: 420px;
-        width: 100%;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-    }
-
-    .auth-header {
-        text-align: center;
-        margin-bottom: 32px;
-    }
-
-    .auth-header h1 {
-        font-size: 32px;
-        font-weight: 700;
-        margin-bottom: 8px;
-        color: var(--text-dark);
-    }
-
-    .auth-header p {
-        color: var(--text-light);
-        font-size: 14px;
-    }
-
-    .auth-form {
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-        margin-bottom: 24px;
-    }
-
-    .form-group {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-    }
-
-    .form-group label {
-        font-weight: 600;
-        color: var(--text-dark);
-        font-size: 14px;
-        display: flex;
-        align-items: center;
-    }
-    
-    .form-group label .material-symbols-rounded {
-        font-size: 20px;
-        margin-right: 4px;
-    }
-
-    .form-group input {
-        padding: 12px;
-        border: 2px solid var(--border);
-        border-radius: 8px;
-        font-size: 14px;
-        transition: all 0.3s;
-        font-family: 'Inter', sans-serif; 
-    }
-
-    .form-group input:focus {
-        outline: none;
-        border-color: var(--primary);
-        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-    }
-
-    .error-message {
-        background-color: #fee2e2;
-        color: var(--error);
-        padding: 12px;
-        border-radius: 8px;
-        font-size: 14px;
-    }
-
-    .submit-btn {
-        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-        color: white;
-        border: none;
-        padding: 12px;
-        border-radius: 8px;
-        font-weight: 600;
-        font-size: 16px;
-        cursor: pointer;
-        transition: transform 0.2s, box-shadow 0.2s;
-        font-family: 'Inter', sans-serif; 
-    }
-
-    .submit-btn:hover:not(:disabled) {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 16px rgba(99, 102, 241, 0.3);
-    }
-
-    .submit-btn:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-    }
-
-    .auth-footer {
-        text-align: center;
-        color: var(--text-light);
-        font-size: 14px;
-    }
-
-    .auth-footer a {
-        color: var(--primary);
-        text-decoration: none;
-        font-weight: 600;
-        cursor: pointer;
     }
 
     /* Dashboard */
@@ -631,9 +503,6 @@
     }
 
     @media (max-width: 768px) {
-        .auth-card {
-            padding: 32px 20px;
-        }
         .dashboard-header {
             flex-direction: column;
             gap: 16px;
@@ -722,64 +591,6 @@
     <div id="loadingSpinner" class="loading-spinner" style="display: none;">
         <div class="spinner"></div>
         <p>Loading...</p>
-    </div>
-
-    <div id="authContainer" class="auth-container" style="display: none;">
-        <div id="loginPage" class="auth-page" style="display: none;">
-            <div class="auth-card">
-                <div class="auth-header">
-                    <h1>💙 MindCare</h1>
-                    <p>Your AI Mental Wellness Companion</p>
-                </div>
-                <form id="loginForm" class="auth-form">
-                    <div class="form-group">
-                        <label for="loginEmail"><span class="material-symbols-rounded">mail</span> Email</label>
-                        <input type="email" id="loginEmail" placeholder="you@example.com" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="loginPassword"><span class="material-symbols-rounded">lock</span> Password</label>
-                        <input type="password" id="loginPassword" placeholder="••••••••" required>
-                    </div>
-                    <div id="loginError" class="error-message" style="display: none;"></div>
-                    <button type="submit" class="submit-btn">Log In</button>
-                </form>
-                <p class="auth-footer">
-                    Don't have an account? <a href="#" onclick="showRegister()">Sign up</a>
-                </p>
-            </div>
-        </div>
-
-        <div id="registerPage" class="auth-page" style="display: none;">
-            <div class="auth-card">
-                <div class="auth-header">
-                    <h1>💙 Join MindCare</h1>
-                    <p>Start your wellness journey</p>
-                </div>
-                <form id="registerForm" class="auth-form">
-                    <div class="form-group">
-                        <label for="registerName"><span class="material-symbols-rounded">person</span> Full Name</label>
-                        <input type="text" id="registerName" placeholder="John Doe" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="registerEmail"><span class="material-symbols-rounded">mail</span> Email</label>
-                        <input type="email" id="registerEmail" placeholder="you@example.com" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="registerPassword"><span class="material-symbols-rounded">lock</span> Password</label>
-                        <input type="password" id="registerPassword" placeholder="••••••••" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="registerConfirmPassword"><span class="material-symbols-rounded">lock</span> Confirm Password</label>
-                        <input type="password" id="registerConfirmPassword" placeholder="••••••••" required>
-                    </div>
-                    <div id="registerError" class="error-message" style="display: none;"></div>
-                    <button type="submit" class="submit-btn">Sign Up</button>
-                </form>
-                <p class="auth-footer">
-                    Already have an account? <a href="#" onclick="showLogin()">Log in</a>
-                </p>
-            </div>
-        </div>
     </div>
 
     <div id="dashboardContainer" class="dashboard" style="display: none;">
@@ -901,8 +712,9 @@
             <button class="modal-close-btn" onclick="closeWhatsAppModal()">&times;</button>
             <h3><span class="material-symbols-rounded">groups</span> Join Our Community</h3>
             <p style="color: var(--text-light); margin: 16px 0;">Connect with others on a similar journey in our private WhatsApp support group.</p>
-            <a href="https://chat.whatsapp.com/YOUR_INVITE_LINK" target="_blank" class="whatsapp-btn">Join Now</a>
-        </div>
+            
+            <a href="https://chat.whatsapp.com/I3kUCH4idI03Zs4nRFBaOl?mode=wwt" target="_blank" class="whatsapp-btn">Join Now</a>
+            </div>
     </div>
 
     <div id="welcomeModal" class="modal-overlay">
@@ -947,119 +759,18 @@ window.addEventListener('DOMContentLoaded', () => {
         loadMoodStats(); 
         startNewConversation(); 
     } else {
-        if (window.location.pathname.endsWith('chatbot.html')) {
-            showLogin();
-        }
+        window.location.href = 'login.html';
     }
 });
 
-function showLogin() {
-    document.getElementById('authContainer').style.display = 'flex';
-    document.getElementById('dashboardContainer').style.display = 'none';
-    document.getElementById('loginPage').style.display = 'flex';
-    document.getElementById('registerPage').style.display = 'none';
-    const loginForm = document.getElementById('loginForm');
-    if (loginForm) {
-        loginForm.addEventListener('submit', handleLogin);
-    }
-}
-
-function showRegister() {
-    document.getElementById('loginPage').style.display = 'none';
-    document.getElementById('registerPage').style.display = 'flex';
-    const registerForm = document.getElementById('registerForm');
-    if(registerForm) {
-        registerForm.addEventListener('submit', handleRegister);
-    }
-}
-
 function showDashboard() {
-    document.getElementById('authContainer').style.display = 'none';
     document.getElementById('dashboardContainer').style.display = 'flex';
     document.getElementById('welcomeText').textContent = `Welcome, ${currentUser.name}! 💙`;
 
-    // Check if welcome modal should be shown
     if (!sessionStorage.getItem('welcomeModalShown')) {
-        // If it's the first visit this session, show the modal
         openWelcomeModal();
     } else {
-        // Otherwise, just auto-start the camera
         toggleCamera(); 
-    }
-}
-
-async function handleLogin(e) {
-    e.preventDefault();
-    showLoading(true);
-    const email = document.getElementById('loginEmail').value;
-    const password = document.getElementById('loginPassword').value;
-    const errorDiv = document.getElementById('loginError');
-    try {
-        const response = await fetch(`${API_URL}/user/login`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password })
-        });
-        if (!response.ok) {
-            const data = await response.json();
-            throw new Error(data.message || 'Login failed');
-        }
-        const data = await response.json();
-        authToken = data.token;
-        currentUser = { id: data.user_id, name: data.name, email: data.email };
-        localStorage.setItem('authToken', authToken);
-        localStorage.setItem('currentUser', JSON.stringify(currentUser));
-        document.getElementById('loginForm').reset();
-        errorDiv.style.display = 'none';
-        
-        // This function will now be called AFTER login
-        showDashboard(); 
-        startNewConversation();
-        loadMoodStats();
-
-    } catch (err) {
-        errorDiv.textContent = err.message;
-        errorDiv.style.display = 'block';
-    } finally {
-        showLoading(false);
-    }
-}
-
-async function handleRegister(e) {
-    e.preventDefault();
-    showLoading(true);
-    const name = document.getElementById('registerName').value;
-    const email = document.getElementById('registerEmail').value;
-    const password = document.getElementById('registerPassword').value;
-    const confirmPassword = document.getElementById('registerConfirmPassword').value;
-    const errorDiv = document.getElementById('registerError');
-    if (password !== confirmPassword) {
-        errorDiv.textContent = 'Passwords do not match';
-        errorDiv.style.display = 'block';
-        showLoading(false);
-        return;
-    }
-    try {
-        const response = await fetch(`${API_URL}/user/register`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            // Note: This only sends name, email, password. 
-            // The /register endpoint in app.py must match this.
-            body: JSON.stringify({ name, email, password }) 
-        });
-        if (!response.ok) {
-            const data = await response.json();
-            throw new Error(data.message || 'Registration failed');
-        }
-        document.getElementById('registerForm').reset();
-        errorDiv.style.display = 'none';
-        alert('Registration successful! Please log in.');
-        showLogin(); // Go back to login form
-    } catch (err) {
-        errorDiv.textContent = err.message;
-        errorDiv.style.display = 'block';
-    } finally {
-        showLoading(false);
     }
 }
 
@@ -1069,9 +780,9 @@ function logout() {
     authToken = null;
     currentUser = null;
     
-    if (isCameraOn) toggleCamera(); // Turn off camera
+    if (isCameraOn) toggleCamera(); 
     
-    window.location.reload(); 
+    window.location.href = 'index.html'; 
 }
 
 async function startNewConversation() {
@@ -1488,7 +1199,6 @@ function openWelcomeModal() {
 function closeWelcomeModal() {
     document.getElementById('welcomeModal').classList.remove('show');
     sessionStorage.setItem('welcomeModalShown', 'true');
-    // Start the camera *after* user clicks "I Understand"
     toggleCamera(); 
 }
 

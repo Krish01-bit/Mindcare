@@ -179,7 +179,7 @@ def get_ai_response(user_message, emotion, user):
     Current user name: {user.name}"""
     
     try:
-        model = genai.GenerativeModel('gemini-2.5-flash') # Using 2.5 flash as requested
+        model = genai.GenerativeModel('gemini-2.5-flash') 
         response = model.generate_content(f"{system_prompt}\n\nUser: {user_message}")
         response_time = int((time.time() - start_time) * 1000)
         return response.text, 'gemini-2.5-flash', response_time
@@ -195,7 +195,7 @@ def get_huggingface_response(user_message, emotion, user, start_time):
             "https://router.huggingface.co/hf-inference",
             headers={"Authorization": f"Bearer {os.getenv('HF_API_TOKEN')}"},
             json={
-                "model": os.getenv("HF_MODEL"), # Should be mistralai/Mistral-7B-Instruct-v0.1
+                "model": os.getenv("HF_MODEL"),
                 "inputs": f"User feeling {emotion} says: {user_message}",
                 "parameters": {
                     "max_new_tokens": 200,
@@ -235,7 +235,6 @@ def register():
     """User registration"""
     data = request.get_json()
     
-    # --- UPDATED: Get all fields from signup form ---
     if not data or not data.get('email') or not data.get('password') or not data.get('name') or not data.get('age') or not data.get('employmentStatus'):
         return jsonify({'message': 'Missing required fields'}), 400
     
@@ -243,7 +242,6 @@ def register():
         return jsonify({'message': 'Email already registered'}), 409
     
     try:
-        # --- UPDATED: Create user with preferences ---
         user = User(
             name=data['name'], 
             email=data['email'],
@@ -287,7 +285,7 @@ def login():
     user.last_login = datetime.utcnow()
     db.session.commit()
     
-    # --- UPDATED: Check if survey is needed ---
+    # Check if survey is needed
     survey_needed = True
     if user.preferences and user.preferences.get('survey_complete'):
         survey_needed = False
@@ -301,7 +299,6 @@ def login():
         'survey_needed': survey_needed # Send this flag to the frontend
     }), 200
 
-# --- NEW: Endpoint to save survey data ---
 @app.route('/user/survey', methods=['POST'])
 @token_required
 def save_survey(current_user):
@@ -333,7 +330,6 @@ def save_survey(current_user):
     except Exception as e:
         db.session.rollback()
         return jsonify({'message': str(e)}), 500
-# --- END NEW ---
 
 # ============================================
 # Conversation Routes
@@ -348,7 +344,7 @@ def start_conversation(current_user):
     try:
         conversation = Conversation(
             user_id=current_user.id,
-            title=data.get('title', 'New Chat'), # Title is now "New Chat"
+            title=data.get('title', 'New Chat'),
             mood_at_start=data.get('emotion', 'neutral'),
             started_at=datetime.utcnow()
         )
@@ -382,11 +378,10 @@ def chat(current_user):
     conversation_id = data.get('conversation_id')
     
     try:
-        # Get or create conversation
         if not conversation_id:
             conversation = Conversation(
                 user_id=current_user.id,
-                title='New Chat', # Default title
+                title='New Chat', 
                 mood_at_start=emotion
             )
             db.session.add(conversation)
@@ -397,12 +392,9 @@ def chat(current_user):
             if not conversation:
                 return jsonify({'message': 'Conversation not found'}), 404
         
-        # === NEW FEATURE: UPDATE TITLE ===
         if (conversation.title == 'New Chat' or conversation.title == 'Chat Session') and user_message:
             conversation.title = (user_message[:50] + '...') if len(user_message) > 50 else user_message
-        # ================================
 
-        # Store user message
         user_msg = ChatMessage(
             conversation_id=conversation_id,
             user_id=current_user.id,
@@ -415,10 +407,8 @@ def chat(current_user):
         db.session.add(user_msg)
         db.session.flush()
         
-        # Get AI response
         bot_response, model_used, response_time = get_ai_response(user_message, emotion, current_user)
         
-        # Store bot message
         bot_msg = ChatMessage(
             conversation_id=conversation_id,
             user_id=current_user.id,
@@ -431,7 +421,6 @@ def chat(current_user):
         )
         db.session.add(bot_msg)
         
-        # Update conversation message count
         conversation.message_count = ChatMessage.query.filter_by(conversation_id=conversation_id).count()
         
         db.session.commit()
@@ -481,14 +470,12 @@ def get_chat_history(current_user, conversation_id):
 @token_required
 def get_conversations(current_user):
     """Get all conversations"""
-    # === UPDATED QUERY: Only get conversations with messages ===
     conversations = Conversation.query.filter(
         Conversation.user_id == current_user.id,
         Conversation.message_count > 0  
     ).order_by(
         Conversation.started_at.desc()
     ).all()
-    # =========================================================
     
     return jsonify({
         'total_conversations': len(conversations),
@@ -537,12 +524,10 @@ def get_mood_stats(current_user, user_id):
     if current_user.id != user_id:
         return jsonify({'message': 'Unauthorized'}), 403
     
-    # === NEW: Ensure all 7 days are present ===
     today = datetime.utcnow().date()
-    seven_days_ago_dt = datetime.utcnow() - timedelta(days=6) # 6 days ago to include today (7 days total)
+    seven_days_ago_dt = datetime.utcnow() - timedelta(days=6) 
     seven_days_ago = seven_days_ago_dt.date()
     
-    # Create a dictionary for all 7 days with empty data
     dates_in_range = [today - timedelta(days=i) for i in range(7)]
     daily_data = {date.isoformat(): {} for date in dates_in_range}
     
@@ -565,7 +550,7 @@ def get_mood_stats(current_user, user_id):
 
     return jsonify({
         'emotion_counts': emotion_counts,
-        'daily_trends': daily_data, # This now contains all 7 days
+        'daily_trends': daily_data, 
         'total_readings': len(emotions)
     }), 200
 

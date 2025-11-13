@@ -1,4 +1,4 @@
-/* FILE: style.css - COMPLETE STYLING */
+/* FILE: css/style.css - COMPLETE STYLING */
 
 * {
     margin: 0;
@@ -31,7 +31,7 @@ nav ul {
     display: flex;
     flex-wrap: wrap;
     gap: 2rem;
-    /* === UPDATED: This aligns links left and buttons right === */
+    /* This aligns links left and buttons right */
     justify-content: space-between;
     align-items: center; 
 }
@@ -59,13 +59,13 @@ nav ul li a.active {
     font-weight: 700;
 }
 
-/* === NEW: Container for the new buttons === */
+/* Container for the new buttons */
 .nav-button-container {
     display: flex;
-    gap: 0.25rem; /* <-- Updated gap */
+    gap: 0.25rem; /* Closer gap */
 }
 
-/* === NEW: Styles for the new buttons === */
+/* Styles for the new buttons */
 .nav-button {
     display: inline-block;
     padding: 0.4rem 1.1rem;
@@ -267,9 +267,8 @@ footer p:last-child {
         padding-bottom: 0.3rem;
     }
 
-    /* === UPDATED: Responsive buttons === */
+    /* Responsive buttons */
     .nav-button-container {
-        /* On small screens, stack the buttons */
         flex-direction: column;
         width: 100%;
         text-align: center;
@@ -280,7 +279,6 @@ footer p:last-child {
         font-size: 0.9rem;
         padding: 0.5rem 1rem;
     }
-    /* ================================ */
 
     .content-box {
         padding: 2rem;

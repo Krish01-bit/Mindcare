@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Prescription - MindCare</title>
+    
+    <link rel="stylesheet" href="css/style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+    <style>
+        body { font-family: 'Inter', sans-serif !important; }
+        .material-symbols-rounded { font-size: 20px; vertical-align: middle; margin-right: 4px; }
+        .content-box h2 { display: flex; align-items: center; gap: 10px; }
+        .info-box {
+            margin-top: 2rem; padding: 1.5rem; background: #eef2ff; border-radius: 10px;
+            border-left: 4px solid #6366f1; display: flex; align-items: center; gap: 1rem;
+        }
+        .info-box .material-symbols-rounded { font-size: 32px; color: #4f46e5; }
+        .info-box p { margin: 0; color: #4338ca; }
+        .info-box p strong { color: #4338ca; }
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6); align-items: center; justify-content: center;
+            z-index: 10000; opacity: 0; transition: opacity 0.2s ease-in-out;
+        }
+        .modal-overlay.show { display: flex; opacity: 1; }
+        .modal-content {
+            background: white; padding: 24px 32px; border-radius: 12px; max-width: 450px;
+            width: 90%; text-align: left; position: relative;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3); animation: modal-fade-in 0.3s ease;
+        }
+        .modal-close-btn {
+            position: absolute; top: 10px; right: 14px; background: none; border: none;
+            font-size: 24px; color: #6b7280; cursor: pointer;
+        }
+        .modal-content h3 { font-size: 22px; color: #1f2937; margin-bottom: 1rem; text-align: center; }
+        .modal-content.success-modal { text-align: center; }
+        .success-icon { font-size: 48px; color: var(--success); }
+        @keyframes modal-fade-in { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        .modal-form .form-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1rem; }
+        .modal-form .form-group label { font-weight: 600; color: #1f2937; font-size: 0.9rem; }
+        .modal-form .form-group input, .modal-form .form-group textarea {
+            padding: 10px; border: 2px solid #e5e7eb; border-radius: 8px;
+            font-size: 1rem; font-family: 'Inter', sans-serif;
+        }
+        .modal-form .form-group input:focus, .modal-form .form-group textarea:focus { outline: none; border-color: #6366f1; }
+        .modal-form .cta-button { width: 100%; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <nav>
+    <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="chatbot.html">Chatbot</a></li>
+        <li><a href="community.html">WhatsApp Community</a></li>
+        <li><a href="premium.html">Premium</a></li>
+        <li><a href="prescription.html" class="active">Doctor Prescription</a></li>
+        <li><a href="about.html">About Us</a></li>
+
+        <li class="nav-button-container">
+            <a href="login.html" class="nav-button login">Log In</a>
+            <a href="signup.html" class="nav-button signup">Sign Up</a>
+        </li>
+    </ul>
+    </nav>
+
+    <div class="container">
+        <div class="content-box">
+            <h2><span class="material-symbols-rounded" style="font-size: 32px;">medical_services</span>Doctor Prescription</h2>
+            <p>Sometimes, professional medical help is necessary. Connect with licensed mental health professionals who can provide proper diagnosis and treatment.</p>
+            
+            <h3 style="color: #667eea; margin-top: 2rem; margin-bottom: 1rem;">Our Services:</h3>
+            <p>✓ Video consultations with psychiatrists<br>
+               ✓ Licensed therapists and counselors<br>
+               ✓ Prescription management<br>
+               ✓ Personalized treatment plans<br>
+               ✓ Follow-up appointments<br>
+               ✓ Emergency consultations available</p>
+
+            <h3 style="color: #667eea; margin-top: 2rem; margin-bottom: 1rem;">How It Works:</h3>
+            <p><strong>Step 1:</strong> Book an appointment with a mental health professional<br>
+               <strong>Step 2:</strong> Complete a brief assessment form<br>
+               <strong>Step 3:</strong> Attend your video consultation<br>
+               <strong>Step 4:</strong> Receive diagnosis and treatment plan<br>
+               <strong>Step 5:</strong> Get prescriptions sent to your pharmacy</p>
+
+            <div class="info-box">
+                <span class="material-symbols-rounded">info</span>
+                <p><strong>A Note from Your AI Companion:</strong>
+                    I'm always here to listen and support you as a friend, 24/7. Part of being a good friend is knowing when to reach out for more help. If you're experiencing severe symptoms or need medical advice, consulting with a licensed professional is a brave and powerful step forward in your wellness journey.
+                </p>
+            </div>
+            
+            <div style="margin-top: 2rem; text-align: center;">
+                <a href="#" class="cta-button" onclick="openAppointmentModal(event)">Book Appointment</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="appointmentModal" class="modal-overlay" onclick="closeAppointmentModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close-btn" onclick="closeAppointmentModal()">&times;</button>
+            <h3>Book an Appointment</h3>
+            
+            <form class="modal-form" onsubmit="handleBooking(event)">
+                <div class="form-group">
+                    <label for="apptName">Full Name</label>
+                    <input type="text" id="apptName" placeholder="Enter your full name" required>
+                </div>
+                <div class="form-group">
+                    <label for="apptPhone">Phone Number</label>
+                    <input type="tel" id="apptPhone" placeholder="Enter your phone number" required>
+                </div>
+                <div class="form-group">
+                    <label for="apptEmail">Email Address</label>
+                    <input type="email" id="apptEmail" placeholder="you@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="apptDate">Preferred Date</label>
+                    <input type="date" id="apptDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="apptReason">Reason for visit (optional)</label>
+                    <textarea id="apptReason" rows="3" placeholder="Briefly describe what you'd like to talk about..."></textarea>
+                </div>
+                <button type="submit" class="cta-button">Request Appointment</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="successModal" class="modal-overlay" onclick="closeBookingSuccessModal()">
+        <div class="modal-content success-modal" onclick="event.stopPropagation()">
+            <span class="material-symbols-rounded success-icon">check_circle</span>
+            <h3>Appointment Requested!</h3>
+            <p style="color: var(--text-light); margin: 16px 0;" id="successModalMessage"></p>
+            <button class="cta-button" style="width: 100%;" onclick="closeBookingSuccessModal()">OK</button>
+        </div>
+    </div>
+
+    <footer>
+        <p><strong>Crisis Support:</strong> If you're in immediate danger, please call your local emergency services or crisis hotline.</p>
+        <p>© 2025 XP Hunters. All rights reserved.</p>
+        <p>Remember: You matter, and your feelings are valid.</p>
+    </footer>
+
+<script>
+function globalLogout() {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('currentUser');
+    window.location.href = 'index.html';
+}
+document.addEventListener('DOMContentLoaded', function() {
+    const authToken = localStorage.getItem('authToken');
+    const navLinks = document.querySelectorAll('nav ul li a');
+    
+    if (authToken) {
+        const navButtonContainer = document.querySelector('.nav-button-container');
+        if (navButtonContainer) {
+            navButtonContainer.innerHTML = '<a href="#" onclick="globalLogout()" class="nav-button login">Log Out</a>';
+        }
+    }
+    
+    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    navLinks.forEach(link => {
+        link.classList.remove('active');
+    });
+    navLinks.forEach(link => {
+        let href = link.getAttribute('href');
+        if ((currentPage === '' || currentPage === 'index.html') && 
+            (href === 'index.html' || href === './')) {
+            link.classList.add('active');
+        } else if (href === currentPage) {
+            link.classList.add('active');
+        }
+    });
+});
+function openAppointmentModal(event) {
+    event.preventDefault(); 
+    document.getElementById('appointmentModal').classList.add('show');
+}
+function closeAppointmentModal() {
+    document.getElementById('appointmentModal').classList.remove('show');
+}
+function openBookingSuccessModal(message) {
+    document.getElementById('successModalMessage').textContent = message;
+    document.getElementById('successModal').classList.add('show');
+}
+function closeBookingSuccessModal() {
+    document.getElementById('successModal').classList.remove('show');
+}
+function handleBooking(event) {
+    event.preventDefault();
+    const phone = document.getElementById('apptPhone').value;
+    const email = document.getElementById('apptEmail').value;
+    console.log("Booking requested for:", {
+        name: document.getElementById('apptName').value,
+        phone: phone, 
+        email: email,
+        date: document.getElementById('apptDate').value,
+        reason: document.getElementById('apptReason').value
+    });
+    
+    closeAppointmentModal();
+    openBookingSuccessModal('Our support team will contact you at ' + email + ' or ' + phone + ' within 30 minutes to confirm.');
+    event.target.reset();
+}
+</script>
+</body>
+</html>
