@@ -6,9 +6,18 @@
     <title>Log In - MindCare</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="auth.css">
+    <style>
+        .error-message {
+            background-color: #fee2e2;
+            color: #ef4444;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+    </style>
 </head>
 <body>
-    <!-- Navigation -->
     <nav>
      <ul>
         <li><a href="login.html" class="signin-link active">Sign In</a></li>
@@ -21,13 +30,14 @@
      </ul>
     </nav>
 
-    <!-- Login Form -->
     <div class="auth-container">
         <div class="auth-box">
             <h2>Welcome Back</h2>
             <p class="auth-subtitle">Log in to continue your mental wellness journey</p>
             
             <form id="loginForm" onsubmit="handleLogin(event)">
+                <div id="loginError" class="error-message" style="display: none;"></div>
+
                 <div class="form-group">
                     <label for="loginEmail">Email Address</label>
                     <input type="email" id="loginEmail" name="loginEmail" required placeholder="your.email@example.com">
@@ -46,7 +56,7 @@
                     <a href="#" class="forgot-link">Forgot password?</a>
                 </div>
 
-                <button type="submit" class="auth-button">Log In</button>
+                <button type="submit" class="auth-button" id="loginButton">Log In</button>
             </form>
 
             <p class="auth-footer">
@@ -56,59 +66,73 @@
     </div>
 
     <script>
-        function handleLogin(event) {
+        const API_URL = 'http://localhost:5000'; // Your backend URL
+
+        async function handleLogin(event) {
             event.preventDefault();
             
-            // Get form data
-            const loginData = {
-                email: document.getElementById('loginEmail').value,
-                password: document.getElementById('loginPassword').value,
-                remember: document.getElementById('remember').checked,
-                timestamp: new Date().toISOString()
-            };
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const errorDiv = document.getElementById('loginError');
+            const loginButton = document.getElementById('loginButton');
 
-            // YOUR FRIEND SHOULD ADD DATABASE AUTHENTICATION HERE
-            console.log('Login Data:', loginData);
-            
-            // Check if user has completed survey (this should come from database)
-            // For demo purposes, we'll check localStorage
-            const hasCompletedSurvey = localStorage.getItem('surveyCompleted') === 'true';
-            
-            if (!hasCompletedSurvey) {
-                // First-time login - redirect to survey
-                alert('Welcome! Please complete a brief wellness assessment.');
-                window.location.href = 'survey.html';
-            } else {
-                // Returning user - redirect to chatbot
-                alert('Login successful! Welcome back.');
+            // Show loading state
+            loginButton.disabled = true;
+            loginButton.textContent = 'Logging In...';
+            errorDiv.style.display = 'none';
+
+            try {
+                const response = await fetch(`${API_URL}/user/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    // Show error message from backend (e.g., "Invalid credentials")
+                    throw new Error(data.message || 'Login failed. Please try again.');
+                }
+
+                // --- SUCCESS ---
+                // This is the "connection" you wanted.
+                // We save the token and user data from the backend.
+                localStorage.setItem('authToken', data.token);
+                localStorage.setItem('currentUser', JSON.stringify({
+                    id: data.user_id,
+                    name: data.name,
+                    email: data.email
+                }));
+
+                // Now, redirect to the chatbot page.
+                // It will see the token and show the dashboard!
                 window.location.href = 'chatbot.html';
+
+            } catch (err) {
+                // Show any error to the user
+                errorDiv.textContent = err.message;
+                errorDiv.style.display = 'block';
+                loginButton.disabled = false;
+                loginButton.textContent = 'Log In';
             }
         }
     </script>
-
-    <!-- Footer -->
     <footer>
         <p>&copy; 2024 MindCare. All rights reserved.</p>
     </footer>
     <script>
-// Navigation Active Link Handler
+// Navigation Active Link Handler (This script is fine)
 document.addEventListener('DOMContentLoaded', function() {
-    // Get current page filename
     const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-    
-    // Get all navigation links
     const navLinks = document.querySelectorAll('nav ul li a');
-    
-    // Remove active class from all links
     navLinks.forEach(link => {
         link.classList.remove('active');
     });
-    
-    // Add active class to current page link
     navLinks.forEach(link => {
         let href = link.getAttribute('href');
-        
-        // Handle root/index cases
         if ((currentPage === '' || currentPage === 'index.html') && 
             (href === 'index.html' || href === './')) {
             link.classList.add('active');

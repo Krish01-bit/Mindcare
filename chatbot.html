@@ -613,6 +613,52 @@ body {
 ::-webkit-scrollbar-thumb:hover {
     background: var(--text-light);
 }
+
+.modal-overlay {
+    display: none; 
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+}
+.modal-overlay.show {
+    display: flex; 
+}
+.modal-content {
+    background: var(--bg-white);
+    padding: 24px 32px;
+    border-radius: 12px;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    animation: modal-fade-in 0.3s ease;
+}
+.modal-close-btn {
+    position: absolute;
+    top: 10px;
+    right: 14px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: var(--text-light);
+    cursor: pointer;
+}
+.modal-content h3 {
+    font-size: 22px;
+    color: var(--text-dark);
+    margin-bottom: 0;
+}
+@keyframes modal-fade-in {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
     </style>
 </head>
 <body>
@@ -708,7 +754,7 @@ body {
                 </div>
 
                 <div class="mood-chart">
-                    <h3>📈 7-Day Mood Trends</h3>
+                    <h3>📈 7-Day Mood Summary</h3>
                     <div id="moodChartContainer" style="height: 200px; background: #f0f4f8; border-radius: 8px; padding: 16px;">
                         <p style="text-align: center; color: #999;">Loading mood data...</p>
                     </div>
@@ -717,7 +763,7 @@ body {
                 <div class="community-section">
                     <h3>⚡ Join Our Community</h3>
                     <p>Connect with others on a similar journey</p>
-                    <a href="community.html" class="whatsapp-btn">Join WhatsApp Support Group</a>
+                    <a href="#" class="whatsapp-btn" onclick="openWhatsAppModal(event)">Join WhatsApp Support Group</a>
                 </div>
             </div>
 
@@ -756,8 +802,16 @@ body {
                             <p id="totalConversations" class="stat-value">0</p>
                         </div>
                     </div>
+
                     <div class="analytics-section">
-                        <h3>Emotion Breakdown (Last 7 Days)</h3>
+                        <h3>Mood Trends (Last 7 Days)</h3>
+                        <div id="dailyMoodTrendChart" style="min-height: 250px; background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 16px; display: flex; justify-content: space-around; align-items: flex-end; gap: 8px;">
+                            <p style="color: #999; margin: auto;">Loading mood trends...</p>
+                        </div>
+                    </div>
+
+                    <div class="analytics-section" style="margin-top: 16px;">
+                        <h3>Emotion Breakdown (Last 7 Days Summary)</h3>
                         <div id="emotionBreakdown">
                             <p style="color: #999;">Loading analytics...</p>
                         </div>
@@ -784,6 +838,17 @@ body {
         </div>
     </div>
 
+    <div id="whatsappModal" class="modal-overlay" onclick="closeWhatsAppModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close-btn" onclick="closeWhatsAppModal()">&times;</button>
+            <h3>⚡ Join Our Community</h3>
+            <p style="color: var(--text-light); margin: 16px 0;">Connect with others on a similar journey in our private WhatsApp support group.</p>
+            
+            <a href="https://chat.whatsapp.com/YOUR_INVITE_LINK" target="_blank" class="whatsapp-btn">Join Now</a>
+        </div>
+    </div>
+
+
     <script>
 // COMPLETE INTEGRATED JAVASCRIPT
 const API_URL = 'http://localhost:5000'; // CHANGE THIS TO YOUR BACKEND URL
@@ -794,12 +859,27 @@ let currentConversationId = null;
 let cameraStream = null;
 let isCameraOn = false;
 
+const EMOTION_COLORS = {
+    happy: '#FFD93D',
+    sad: '#6C8EBF',
+    angry: '#FF6B6B',
+    anxious: '#FFA500',
+    calm: '#90EE90',
+    neutral: '#9DB4C4'
+};
+
 window.addEventListener('DOMContentLoaded', () => {
     if (authToken && currentUser) {
         showDashboard();
-        loadMoodStats();
+        loadMoodStats(); 
+        startNewConversation(); 
     } else {
-        showLogin();
+        // --- NEW: Check which page we are on ---
+        // If we are on chatbot.html AND not logged in, show the login UI
+        // Otherwise, if we're on index.html etc., do nothing.
+        if (window.location.pathname.endsWith('chatbot.html')) {
+            showLogin();
+        }
     }
 });
 
@@ -808,19 +888,30 @@ function showLogin() {
     document.getElementById('dashboardContainer').style.display = 'none';
     document.getElementById('loginPage').style.display = 'flex';
     document.getElementById('registerPage').style.display = 'none';
-    document.getElementById('loginForm').addEventListener('submit', handleLogin);
+    // Attach listener to the form *inside* chatbot.html
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', handleLogin);
+    }
 }
 
 function showRegister() {
     document.getElementById('loginPage').style.display = 'none';
     document.getElementById('registerPage').style.display = 'flex';
-    document.getElementById('registerForm').addEventListener('submit', handleRegister);
+     // Attach listener to the form *inside* chatbot.html
+    const registerForm = document.getElementById('registerForm');
+    if(registerForm) {
+        registerForm.addEventListener('submit', handleRegister);
+    }
 }
 
 function showDashboard() {
     document.getElementById('authContainer').style.display = 'none';
     document.getElementById('dashboardContainer').style.display = 'flex';
     document.getElementById('welcomeText').textContent = `Welcome, ${currentUser.name}! 💙`;
+
+    // --- NEW: Auto-start the camera ---
+    toggleCamera();
 }
 
 async function handleLogin(e) {
@@ -845,6 +936,7 @@ async function handleLogin(e) {
         localStorage.setItem('authToken', authToken);
         localStorage.setItem('currentUser', JSON.stringify(currentUser));
         document.getElementById('loginForm').reset();
+        errorDiv.style.display = 'none';
         showDashboard();
         startNewConversation();
         loadMoodStats();
@@ -881,8 +973,9 @@ async function handleRegister(e) {
             throw new Error(data.message || 'Registration failed');
         }
         document.getElementById('registerForm').reset();
+        errorDiv.style.display = 'none';
         alert('Registration successful! Please log in.');
-        showLogin();
+        showLogin(); // Go back to login form
     } catch (err) {
         errorDiv.textContent = err.message;
         errorDiv.style.display = 'block';
@@ -896,8 +989,13 @@ function logout() {
     localStorage.removeItem('currentUser');
     authToken = null;
     currentUser = null;
-    document.getElementById('chatBox').innerHTML = '<div class="empty-state"><h2>Hello! 👋</h2><p>I\'m here to listen and support you.</p><p>Share whatever\'s on your mind.</p></div>';
-    window.location.href = 'index.html';
+    
+    if (isCameraOn) toggleCamera(); // Turn off camera
+    
+    // --- UPDATED: Redirect to login page ---
+    // Instead of just clearing the chat, we'll reload the page.
+    // The 'DOMContentLoaded' listener will see no token and call showLogin().
+    window.location.reload(); 
 }
 
 async function startNewConversation() {
@@ -909,15 +1007,16 @@ async function startNewConversation() {
                 'Authorization': `Bearer ${authToken}`
             },
             body: JSON.stringify({
-                title: `Chat - ${new Date().toLocaleDateString()}`,
+                title: `New Chat`, 
                 emotion: currentEmotion
             })
         });
         if (response.ok) {
             const data = await response.json();
             currentConversationId = data.conversation_id;
+            document.getElementById('chatBox').innerHTML = '<div class="empty-state"><h2>Hello! 👋</h2><p>I\'m here to listen and support you.</p><p>Share whatever\'s on your mind.</p></div>';
         }
-    } catch (err) {
+    } catch (err)
         console.error('Error starting conversation:', err);
     }
 }
@@ -926,8 +1025,14 @@ async function sendMessage() {
     const input = document.getElementById('messageInput');
     const message = input.value.trim();
     if (!message) return;
+
+    if (!currentConversationId) {
+        await startNewConversation();
+    }
+
     addMessageToChat(message, 'user');
     input.value = '';
+    
     try {
         showLoading(true);
         const response = await fetch(`${API_URL}/chat`, {
@@ -945,7 +1050,12 @@ async function sendMessage() {
         if (response.ok) {
             const data = await response.json();
             addMessageToChat(data.message, 'bot');
-            loadMoodStats();
+            if (document.getElementById('analyticsTab').classList.contains('active')) {
+                loadAnalytics();
+            }
+            loadMoodStats(); 
+        } else {
+             throw new Error('Failed to get response from server');
         }
     } catch (err) {
         console.error('Error sending message:', err);
@@ -958,7 +1068,7 @@ async function sendMessage() {
 function addMessageToChat(content, role) {
     const chatBox = document.getElementById('chatBox');
     const emptyState = chatBox.querySelector('.empty-state');
-    if (emptyState) emptyState.remove();
+    if (emptyState) empty.remove();
     const messageDiv = document.createElement('div');
     messageDiv.className = `message ${role}`;
     const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -992,7 +1102,11 @@ async function toggleCamera() {
             btn.textContent = '⏹️ Stop Camera';
             detectEmotion();
         } catch (err) {
-            alert('Camera permission denied or camera not available');
+            console.error('Camera permission denied or camera not available.', err);
+            // Don't alert, just log. Silently fail if user denies.
+            btn.textContent = '📷 Start Camera';
+            video.style.display = 'none';
+            isCameraOn = false;
         }
     } else {
         if (cameraStream) {
@@ -1032,7 +1146,7 @@ async function detectEmotion() {
         } catch (err) {
             console.error('Error logging emotion:', err);
         }
-    }, 1000);
+    }, 5000); 
 }
 
 function switchTab(tabName) {
@@ -1045,7 +1159,12 @@ function switchTab(tabName) {
     const tabId = tabName === 'chat' ? 'chatTab' : 
                   tabName === 'analytics' ? 'analyticsTab' : 'historyTab';
     document.getElementById(tabId).classList.add('active');
-    event.target.classList.add('active');
+    
+    const clickedButton = Array.from(document.querySelectorAll('.nav-btn')).find(
+        btn => btn.getAttribute('onclick') === `switchTab('${tabName}')`
+    );
+    if(clickedButton) clickedButton.classList.add('active');
+
     if (tabName === 'analytics') {
         loadAnalytics();
     } else if (tabName === 'history') {
@@ -1073,23 +1192,18 @@ function displayMoodChart(data) {
         container.innerHTML = '<p style="text-align: center; color: #999;">No emotion data yet</p>';
         return;
     }
+    
+    const totalEmotions = Object.values(data.emotion_counts).reduce((a, b) => a + b, 0);
+    
     let html = '<div style="display: flex; flex-direction: column; gap: 12px;">';
     Object.entries(data.emotion_counts).forEach(([emotion, count]) => {
-        const colors = {
-            happy: '#FFD93D',
-            sad: '#6C8EBF',
-            angry: '#FF6B6B',
-            anxious: '#FFA500',
-            calm: '#90EE90',
-            neutral: '#9DB4C4'
-        };
-        const color = colors[emotion] || '#808080';
-        const width = (count / Math.max(...Object.values(data.emotion_counts))) * 100;
+        const color = EMOTION_COLORS[emotion] || '#808080';
+        const width = totalEmotions > 0 ? (count / totalEmotions) * 100 : 0;
         html += `
             <div style="display: flex; align-items: center; gap: 8px;">
-                <span style="width: 80px; font-size: 12px;">${emotion}</span>
+                <span style="width: 80px; font-size: 12px; text-transform: capitalize;">${escapeHtml(emotion)}</span>
                 <div style="flex: 1; height: 20px; background: #e0e0e0; border-radius: 4px; overflow: hidden;">
-                    <div style="width: ${width}%; height: 100%; background: ${color};"></div>
+                    <div style="width: ${width}%; height: 100%; background: ${color};" title="${count} entries"></div>
                 </div>
                 <span style="width: 30px; font-size: 12px; text-align: right;">${count}</span>
             </div>
@@ -1101,31 +1215,96 @@ function displayMoodChart(data) {
 
 async function loadAnalytics() {
     try {
-        const response = await fetch(`${API_URL}/dashboard/summary/${currentUser.id}`, {
+        const summaryResponse = await fetch(`${API_URL}/dashboard/summary/${currentUser.id}`, {
             headers: { 'Authorization': `Bearer ${authToken}` }
         });
-        if (response.ok) {
-            const data = await response.json();
+        if (summaryResponse.ok) {
+            const data = await summaryResponse.json();
             document.getElementById('todayMessages').textContent = data.today.messages;
             document.getElementById('todayEmotions').textContent = data.today.emotions_logged;
             document.getElementById('weekConversations').textContent = data.last_7_days.conversations;
             document.getElementById('totalConversations').textContent = data.all_time.total_conversations;
+            
             const breakdown = document.getElementById('emotionBreakdown');
-            let html = '<div style="display: flex; flex-direction: column; gap: 12px;">';
-            Object.entries(data.last_7_days.emotion_breakdown).forEach(([emotion, count]) => {
-                html += `
-                    <div style="display: flex; justify-content: space-between; padding: 8px; background: #f8f9fb; border-radius: 4px;">
-                        <span>${emotion}</span>
-                        <strong>${count}</strong>
-                    </div>
-                `;
-            });
-            html += '</div>';
-            breakdown.innerHTML = html;
+            if (Object.keys(data.last_7_days.emotion_breakdown).length > 0) {
+                let html = '<div style="display: flex; flex-direction: column; gap: 12px;">';
+                Object.entries(data.last_7_days.emotion_breakdown).forEach(([emotion, count]) => {
+                    html += `
+                        <div style="display: flex; justify-content: space-between; padding: 8px; background: #fff; border: 1px solid var(--border); border-radius: 4px;">
+                            <span style="text-transform: capitalize;">${escapeHtml(emotion)}</span>
+                            <strong>${count}</strong>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+                breakdown.innerHTML = html;
+            } else {
+                 breakdown.innerHTML = '<p style="color: #999;">No emotion data for the last 7 days.</p>';
+            }
         }
+
+        const moodResponse = await fetch(`${API_URL}/mood_stats/${currentUser.id}`, {
+            headers: { 'Authorization': `Bearer ${authToken}` }
+        });
+        if (moodResponse.ok) {
+            const moodData = await moodResponse.json();
+            displayDailyTrendChart(moodData.daily_trends);
+        }
+
     } catch (err) {
         console.error('Error loading analytics:', err);
     }
+}
+
+function displayDailyTrendChart(dailyData) {
+    const container = document.getElementById('dailyMoodTrendChart');
+    const sortedDates = Object.keys(dailyData).sort(); 
+
+    if (sortedDates.length === 0) {
+        container.innerHTML = '<p style="color: #999; margin: auto;">No mood trend data available.</p>';
+        return;
+    }
+    
+    let maxDailyTotal = 0;
+    sortedDates.forEach(date => {
+        const total = Object.values(dailyData[date]).reduce((a, b) => a + b, 0);
+        if (total > maxDailyTotal) maxDailyTotal = total;
+    });
+
+    if (maxDailyTotal === 0) {
+         container.innerHTML = '<p style="color: #999; margin: auto;">No mood entries logged in the last 7 days.</p>';
+        return;
+    }
+
+    let html = '';
+    sortedDates.forEach(date => {
+        const dayEmotions = dailyData[date];
+        const dayTotal = Object.values(dayEmotions).reduce((a, b) => a + b, 0);
+        const dayName = new Date(date + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'short' });
+        const dayNum = new Date(date + 'T00:00:00').getDate();
+
+        let barHtml = '';
+        if (dayTotal > 0) {
+            Object.entries(dayEmotions).forEach(([emotion, count]) => {
+                const heightPercent = (count / maxDailyTotal) * 100;
+                const color = EMOTION_COLORS[emotion] || '#808080';
+                barHtml += `<div style="height: ${heightPercent}%; background: ${color};" title="${escapeHtml(emotion)}: ${count}"></div>`;
+            });
+        } else {
+             barHtml = `<div style="height: 100%; background: transparent;"></div>`;
+        }
+
+        html += `
+            <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; height: 100%;">
+                <div style="width: 40px; height: 200px; background: #f0f4f8; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column-reverse; border: 1px solid var(--border);">
+                    ${barHtml}
+                </div>
+                <span style="font-size: 12px; font-weight: 600; color: var(--text-light);">${dayName} ${dayNum}</span>
+            </div>
+        `;
+    });
+
+    container.innerHTML = html;
 }
 
 async function loadHistory() {
@@ -1148,22 +1327,27 @@ function displayConversations(conversations) {
         list.innerHTML = '<p style="color: #999; text-align: center;">No conversations yet</p>';
         return;
     }
-    list.innerHTML = conversations.map(conv => `
-        <div class="conversation-item" onclick="loadConversationMessages(${conv.id})">
-            <div style="margin-bottom: 8px;">
-                <strong>${conv.title}</strong>
-                <span style="background: #fef3c7; color: #92400e; padding: 2px 6px; border-radius: 4px; font-size: 12px;">
-                    ${conv.mood_at_start}
+    list.innerHTML = conversations.map((conv, index) => {
+        const isActive = (index === 0 && currentConversationId === conv.id);
+        return `
+        <div class="conversation-item ${isActive ? 'active' : ''}" onclick="loadConversationMessages(${conv.id}, this)">
+            <div style="margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 8px;">
+                <strong style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${escapeHtml(conv.title)}</strong>
+                <span style="background: #fef3c7; color: #92400e; padding: 2px 6px; border-radius: 4px; font-size: 12px; flex-shrink: 0; text-transform: capitalize;">
+                    ${escapeHtml(conv.mood_at_start)}
                 </span>
             </div>
             <div style="font-size: 12px; color: #999;">
                 ${new Date(conv.started_at).toLocaleDateString()} • ${conv.message_count} messages
             </div>
         </div>
-    `).join('');
+    `}).join('');
 }
 
-async function loadConversationMessages(conversationId) {
+async function loadConversationMessages(conversationId, element) {
+    document.querySelectorAll('.conversation-item').forEach(item => item.classList.remove('active'));
+    if(element) element.classList.add('active');
+
     try {
         const response = await fetch(`${API_URL}/chat_history/${conversationId}`, {
             headers: { 'Authorization': `Bearer ${authToken}` }
@@ -1196,13 +1380,14 @@ function displayMessages(messages) {
                     max-width: 70%;
                     padding: 12px 16px;
                     border-radius: 12px;
-                    background: ${isUser ? '#6366f1' : '#e5e7eb'};
-                    color: ${isUser ? 'white' : '#1f2937'};
+                    background: ${isUser ? 'var(--primary)' : 'var(--border)'};
+                    color: ${isUser ? 'white' : 'var(--text-dark)'};
+                    text-align: left;
                 ">
-                    <p style="margin: 0;">${escapeHtml(msg.content)}</p>
-                    <span style="font-size: 11px; opacity: 0.7; display: block; margin-top: 4px;">
+                    <p style="margin: 0; word-wrap: break-word;">${escapeHtml(msg.content)}</p>
+                    <span style="font-size: 11px; opacity: 0.7; display: block; margin-top: 4px; ${isUser ? 'text-align: right;' : ''}">
                         ${time}
-                        ${msg.emotion ? ` • ${msg.emotion}` : ''}
+                        ${msg.emotion ? ` • ${escapeHtml(msg.emotion)}` : ''}
                     </span>
                 </div>
             </div>
@@ -1213,6 +1398,15 @@ function displayMessages(messages) {
 
 function showLoading(show) {
     document.getElementById('loadingSpinner').style.display = show ? 'flex' : 'none';
+}
+
+function openWhatsAppModal(event) {
+    event.preventDefault(); 
+    document.getElementById('whatsappModal').classList.add('show');
+}
+
+function closeWhatsAppModal() {
+    document.getElementById('whatsappModal').classList.remove('show');
 }
     </script>
 </body>

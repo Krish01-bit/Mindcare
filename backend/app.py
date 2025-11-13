@@ -6,7 +6,7 @@
 # ============================================
 
 import json
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from functools import wraps
 import jwt
 import time
@@ -179,10 +179,10 @@ def get_ai_response(user_message, emotion, user):
     Current user name: {user.name}"""
     
     try:
-        model = genai.GenerativeModel('gemini-2.5-flash')
+        model = genai.GenerativeModel('gemini-2.5-flash') # Using 1.5-flash
         response = model.generate_content(f"{system_prompt}\n\nUser: {user_message}")
         response_time = int((time.time() - start_time) * 1000)
-        return response.text, 'gemini', response_time
+        return response.text, 'gemini-1.5-flash', response_time
     except Exception as e:
         print(f"Gemini error: {e}")
         return get_huggingface_response(user_message, emotion, user, start_time)
@@ -298,7 +298,7 @@ def start_conversation(current_user):
     try:
         conversation = Conversation(
             user_id=current_user.id,
-            title=data.get('title', 'New Chat'),
+            title=data.get('title', 'New Chat'), # Title is now "New Chat"
             mood_at_start=data.get('emotion', 'neutral'),
             started_at=datetime.utcnow()
         )
@@ -336,7 +336,7 @@ def chat(current_user):
         if not conversation_id:
             conversation = Conversation(
                 user_id=current_user.id,
-                title='Chat Session',
+                title='New Chat', # Default title
                 mood_at_start=emotion
             )
             db.session.add(conversation)
@@ -347,6 +347,12 @@ def chat(current_user):
             if not conversation:
                 return jsonify({'message': 'Conversation not found'}), 404
         
+        # === NEW FEATURE: UPDATE TITLE ===
+        # If title is default, update it with the first user message
+        if (conversation.title == 'New Chat' or conversation.title == 'Chat Session') and user_message:
+            conversation.title = (user_message[:50] + '...') if len(user_message) > 50 else user_message
+        # ================================
+
         # Store user message
         user_msg = ChatMessage(
             conversation_id=conversation_id,
@@ -477,27 +483,38 @@ def get_mood_stats(current_user, user_id):
     if current_user.id != user_id:
         return jsonify({'message': 'Unauthorized'}), 403
     
-    seven_days_ago = datetime.utcnow() - timedelta(days=7)
+    # === NEW: Ensure all 7 days are present ===
+    today = datetime.utcnow().date()
+    seven_days_ago_dt = datetime.utcnow() - timedelta(days=6) # 6 days ago to include today (7 days total)
+    seven_days_ago = seven_days_ago_dt.date()
+    
+    # Create a dictionary for all 7 days with empty data
+    dates_in_range = [today - timedelta(days=i) for i in range(7)]
+    daily_data = {date.isoformat(): {} for date in dates_in_range}
+    
     emotions = EmotionLog.query.filter(
         EmotionLog.user_id == user_id,
-        EmotionLog.detected_at >= seven_days_ago
+        db.func.date(EmotionLog.detected_at) >= seven_days_ago,
+        db.func.date(EmotionLog.detected_at) <= today
     ).all()
     
     emotion_counts = {}
-    daily_data = {}
     
     for emotion_record in emotions:
-        date = emotion_record.detected_at.date().isoformat()
+        date_str = emotion_record.detected_at.date().isoformat()
         emotion_name = emotion_record.emotion
         
+        # Populate overall counts
         emotion_counts[emotion_name] = emotion_counts.get(emotion_name, 0) + 1
-        if date not in daily_data:
-            daily_data[date] = {}
-        daily_data[date][emotion_name] = daily_data[date].get(emotion_name, 0) + 1
-    
+        
+        # Populate daily data (check if date is in our dict)
+        if date_str in daily_data:
+            daily_data[date_str][emotion_name] = daily_data[date_str].get(emotion_name, 0) + 1
+    # ==========================================
+
     return jsonify({
         'emotion_counts': emotion_counts,
-        'daily_trends': daily_data,
+        'daily_trends': daily_data, # This now contains all 7 days
         'total_readings': len(emotions)
     }), 200
 
@@ -509,7 +526,7 @@ def get_dashboard_summary(current_user, user_id):
         return jsonify({'message': 'Unauthorized'}), 403
     
     today = datetime.utcnow().date()
-    seven_days_ago = datetime.utcnow() - timedelta(days=7)
+    seven_days_ago = (datetime.utcnow() - timedelta(days=7)).date()
     
     today_messages = ChatMessage.query.filter(
         ChatMessage.user_id == user_id,
@@ -524,18 +541,18 @@ def get_dashboard_summary(current_user, user_id):
     
     week_conversations = Conversation.query.filter(
         Conversation.user_id == user_id,
-        Conversation.started_at >= seven_days_ago
+        db.func.date(Conversation.started_at) >= seven_days_ago
     ).count()
     
     week_messages = ChatMessage.query.filter(
         ChatMessage.user_id == user_id,
-        ChatMessage.created_at >= seven_days_ago,
+        db.func.date(ChatMessage.created_at) >= seven_days_ago,
         ChatMessage.message_type == 'user'
     ).count()
     
     emotions = EmotionLog.query.filter(
         EmotionLog.user_id == user_id,
-        EmotionLog.detected_at >= seven_days_ago
+        db.func.date(EmotionLog.detected_at) >= seven_days_ago
     ).all()
     
     emotion_counts = {}
