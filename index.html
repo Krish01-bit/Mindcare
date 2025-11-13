@@ -5,36 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MindCare - AI Mental Health Support</title>
     <link rel="stylesheet" href="style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
 </head>
 <body>
-    <!-- Navigation -->
-   <nav>
+    <nav>
     <ul>
-        <li><a href="login.html" class="signin-link">Sign In</a></li>
         <li><a href="index.html" class="active">Home</a></li>
         <li><a href="chatbot.html">Chatbot</a></li>
         <li><a href="community.html">WhatsApp Community</a></li>
         <li><a href="premium.html">Premium</a></li>
         <li><a href="prescription.html">Doctor Prescription</a></li>
         <li><a href="about.html">About Us</a></li>
-    </ul>
+
+        <li class="nav-button-container">
+            <a href="login.html" class="nav-button login">Log In</a>
+            <a href="signup.html" class="nav-button signup">Sign Up</a>
+        </li>
+        </ul>
    </nav>
 
-    <!-- Hero Section -->
     <section class="hero">
         <h1>Welcome to MindCare</h1>
         <p>Your AI companion for mental wellness. We're here to listen, support, and guide you through difficult times.</p>
         <a href="signup.html" class="cta-button">Get Started - Sign Up Free</a>
-    </section>
+        
+        <p style="margin-top: 1.5rem; font-size: 0.9rem;">
+            Already have an account? <a href="login.html" style="color: white; font-weight: 600; text-decoration: underline;">Log In</a>
+        </p>
+        </section>
 
-    <!-- Support Message -->
     <div class="support-text">
         <p><strong>You are not alone.</strong> Whether you're feeling down, anxious, or just need someone to talk to, we're here for you 24/7. Your mental health matters, and taking this step shows incredible strength.</p>
     </div>
 
-    <!-- Features Section -->
     <div class="features">
-        <!-- AI Chatbot Box -->
         <a href="chatbot.html" class="feature-card" style="text-decoration: none; color: inherit;">
             <div class="icon">💬</div>
             <h3>AI Chatbot</h3>
@@ -42,7 +50,6 @@
             <small style="color: #667eea; font-weight: 600;">→ Start Chatting</small>
         </a>
 
-        <!-- WhatsApp Community Box -->
         <a href="community.html" class="feature-card" style="text-decoration: none; color: inherit;">
             <div class="icon">👥</div>
             <h3>WhatsApp Community</h3>
@@ -50,7 +57,6 @@
             <small style="color: #667eea; font-weight: 600;">→ Join Community</small>
         </a>
 
-        <!-- Premium Features Box -->
         <a href="premium.html" class="feature-card" style="text-decoration: none; color: inherit;">
             <div class="icon">⭐</div>
             <h3>Premium Features</h3>
@@ -58,7 +64,6 @@
             <small style="color: #667eea; font-weight: 600;">→ Upgrade Now</small>
         </a>
 
-        <!-- Doctor Prescription Box -->
         <a href="prescription.html" class="feature-card" style="text-decoration: none; color: inherit;">
             <div class="icon">🏥</div>
             <h3>Doctor Prescription</h3>
@@ -66,7 +71,6 @@
             <small style="color: #667eea; font-weight: 600;">→ Book Appointment</small>
         </a>
 
-        <!-- About Us Box -->
         <a href="about.html" class="feature-card" style="text-decoration: none; color: inherit;">
             <div class="icon">❤️</div>
             <h3>About Us</h3>
@@ -74,7 +78,6 @@
             <small style="color: #667eea; font-weight: 600;">→ Learn More</small>
         </a>
 
-        <!-- Safe & Confidential Box -->
         <div class="feature-card" style="cursor: default;">
             <div class="icon">🔒</div>
             <h3>Safe & Confidential</h3>
@@ -83,7 +86,6 @@
         </div>
     </div>
 
-    <!-- Footer -->
     <footer>
         <p><strong>Crisis Support:</strong> If you're in immediate danger, please call your local emergency services or crisis hotline.</p>
         <p>&copy; 2024 MindCare. All rights reserved.</p>
@@ -91,21 +93,73 @@
     </footer>
 
     <style>
-        /* Make feature cards clickable */
+        body {
+            font-family: 'Inter', sans-serif !important;
+        }
         .feature-card {
             cursor: pointer;
             transition: all 0.3s ease;
         }
-
         .feature-card:hover {
             transform: translateY(-8px) !important;
             box-shadow: 0 12px 30px rgba(0,0,0,0.2) !important;
         }
-
         .feature-card small {
             display: inline-block;
             margin-top: 0.5rem;
         }
+
+        /* === NEW STYLES for Login/Signup buttons === */
+        nav ul {
+            /* This pushes "Home..." to the left and buttons to the right */
+            justify-content: space-between; 
+            align-items: center;
+        }
+
+        /* Hide the old button from style.css */
+        nav ul li a.signin-link {
+            display: none;
+        }
+
+        .nav-button-container {
+            display: flex;
+            gap: 0.75rem;
+            /* Remove fixed positioning, keep in flow */
+            position: relative; 
+        }
+
+        .nav-button {
+            display: inline-block;
+            padding: 0.4rem 1.1rem; /* A bit smaller to fit better */
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            border: 2px solid transparent;
+            /* This aligns them vertically with the other nav links */
+            line-height: 1.5; 
+        }
+
+        .nav-button.login {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+        }
+        .nav-button.login:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .nav-button.signup {
+            background: rgba(255, 255, 255, 0.9);
+            color: #4f46e5;
+            border: 2px solid #667eea;
+        }
+        .nav-button.signup:hover {
+            background: #ffffff;
+        }
+        /* =========================================== */
     </style>
     <script>
 // Navigation Active Link Handler

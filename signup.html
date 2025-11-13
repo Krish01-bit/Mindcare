@@ -6,56 +6,125 @@
     <title>Sign Up - MindCare</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="auth.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+    <style>
+        /* Apply Font & Icon Styles */
+        body {
+            font-family: 'Inter', sans-serif !important;
+        }
+        .material-symbols-rounded {
+          font-variation-settings:
+          'FILL' 0,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 24;
+          font-size: 20px;
+          vertical-align: middle;
+          margin-right: 4px;
+        }
+        .form-group label {
+            display: flex;
+            align-items: center;
+        }
+        .auth-box {
+            max-width: 480px; 
+        }
+        .error-message {
+            background-color: #fee2e2;
+            color: #ef4444;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+
+        /* Fix for Checkbox Alignment */
+        .checkbox-group label {
+            display: flex !important;
+            align-items: flex-start !important; /* Align to the top */
+            font-size: 0.9rem; 
+            color: #333; /* Darker text */
+        }
+        .checkbox-group input[type="checkbox"] {
+            margin-right: 0.75rem; /* More space */
+            flex-shrink: 0; /* Prevent checkbox from shrinking */
+            margin-top: 0.15rem; /* Nudge checkbox down to align with text */
+            width: 1.15rem; /* Make checkbox slightly larger */
+            height: 1.15rem;
+        }
+        .checkbox-group label span {
+             line-height: 1.5; /* Improve line spacing if it wraps */
+        }
+        .checkbox-group label a {
+            font-size: 0.9rem; 
+            font-weight: 600; /* Make links bolder */
+            color: #4f46e5; /* Match theme */
+            text-decoration: underline;
+        }
+        .required-star {
+            color: #ef4444; /* Red color */
+            margin-left: 2px;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-    <!-- Navigation -->
     <nav>
         <ul>
-            <li><a href="login.html" class="signin-link">Sign In</a></li>
             <li><a href="index.html">Home</a></li>
             <li><a href="chatbot.html">Chatbot</a></li>
             <li><a href="community.html">WhatsApp Community</a></li>
             <li><a href="premium.html">Premium</a></li>
             <li><a href="prescription.html">Doctor Prescription</a></li>
             <li><a href="about.html">About Us</a></li>
+
+            <li class="nav-button-container">
+                <a href="login.html" class="nav-button login">Log In</a>
+                <a href="signup.html" class="nav-button signup active">Sign Up</a> 
+            </li>
         </ul>
     </nav>
 
-    <!-- Sign Up Form -->
     <div class="auth-container">
         <div class="auth-box">
             <h2>Create Your Account</h2>
             <p class="auth-subtitle">Join MindCare for personalized mental health support</p>
             
             <form id="signupForm" onsubmit="handleSignup(event)">
+                <div id="signupError" class="error-message" style="display: none;"></div>
+
                 <div class="form-group">
-                    <label for="fullname">Full Name *</label>
+                    <label for="fullname"><span class="material-symbols-rounded">person</span>Full Name *</label>
                     <input type="text" id="fullname" name="fullname" required placeholder="Enter your full name">
                 </div>
 
                 <div class="form-group">
-                    <label for="email">Email Address *</label>
+                    <label for="email"><span class="material-symbols-rounded">mail</span>Email Address *</label>
                     <input type="email" id="email" name="email" required placeholder="your.email@example.com">
-                    <small>A verification email will be sent to this address</small>
                 </div>
 
                 <div class="form-group">
-                    <label for="password">Password *</label>
+                    <label for="password"><span class="material-symbols-rounded">lock</span>Password *</label>
                     <input type="password" id="password" name="password" required minlength="8" placeholder="Minimum 8 characters">
                 </div>
 
                 <div class="form-group">
-                    <label for="confirmPassword">Confirm Password *</label>
+                    <label for="confirmPassword"><span class="material-symbols-rounded">lock_reset</span>Confirm Password *</label>
                     <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="Re-enter your password">
                 </div>
 
                 <div class="form-group">
-                    <label for="age">Age *</label>
+                    <label for="age"><span class="material-symbols-rounded">cake</span>Age *</label>
                     <input type="number" id="age" name="age" required min="13" max="120" placeholder="Your age">
                 </div>
 
                 <div class="form-group">
-                    <label for="employmentStatus">Employment Status *</label>
+                    <label for="employmentStatus"><span class="material-symbols-rounded">work</span>Employment Status *</label>
                     <select id="employmentStatus" name="employmentStatus" required>
                         <option value="">Select your status</option>
                         <option value="student">Student</option>
@@ -71,11 +140,11 @@
                 <div class="form-group checkbox-group">
                     <label>
                         <input type="checkbox" id="terms" name="terms" required>
-                        I agree to the <a href="#">Terms & Conditions</a> and <a href="#">Privacy Policy</a>
+                        <span>I have read and agree to MindCare's <a href="terms.html" target="_blank">Terms of Service</a> and <a href="privacy.html" target="_blank">Privacy Policy</a>.<span class="required-star">*</span></span>
                     </label>
                 </div>
 
-                <button type="submit" class="auth-button">Create Account</button>
+                <button type="submit" class="auth-button" id="signupButton">Create Account</button>
             </form>
 
             <p class="auth-footer">
@@ -85,62 +154,78 @@
     </div>
 
     <script>
-        function handleSignup(event) {
+        const API_URL = 'http://localhost:5000';
+
+        async function handleSignup(event) {
             event.preventDefault();
             
-            // Get form data
-            const formData = {
-                fullname: document.getElementById('fullname').value,
-                email: document.getElementById('email').value,
-                password: document.getElementById('password').value,
-                confirmPassword: document.getElementById('confirmPassword').value,
-                age: document.getElementById('age').value,
-                employmentStatus: document.getElementById('employmentStatus').value,
-                timestamp: new Date().toISOString()
-            };
+            const name = document.getElementById('fullname').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const age = document.getElementById('age').value; 
+            const employmentStatus = document.getElementById('employmentStatus').value; 
+            
+            const errorDiv = document.getElementById('signupError');
+            const signupButton = document.getElementById('signupButton');
 
-            // Validate passwords match
-            if (formData.password !== formData.confirmPassword) {
-                alert('Passwords do not match. Please try again.');
+            if (password !== confirmPassword) {
+                errorDiv.textContent = 'Passwords do not match. Please try again.';
+                errorDiv.style.display = 'block';
                 return;
             }
 
-            // YOUR FRIEND SHOULD ADD DATABASE CODE HERE
-            console.log('Sign Up Data:', formData);
-            
-            // Send verification email (backend required)
-            // sendVerificationEmail(formData.email);
-            
-            alert('Account created successfully! Please check your email for verification link. You can now log in.');
-            
-            // Redirect to login
-            window.location.href = 'login.html';
+            signupButton.disabled = true;
+            signupButton.textContent = 'Creating Account...';
+            errorDiv.style.display = 'none';
+
+            try {
+                const response = await fetch(`${API_URL}/user/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        name, 
+                        email, 
+                        password,
+                        age,
+                        employmentStatus 
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Signup failed. Please try again.');
+                }
+
+                alert('Account created successfully! Please log in to continue.');
+                
+                window.location.href = 'login.html';
+
+            } catch (err) {
+                errorDiv.textContent = err.message;
+                errorDiv.style.display = 'block';
+                signupButton.disabled = false;
+                signupButton.textContent = 'Create Account';
+            }
         }
     </script>
 
-    <!-- Footer -->
     <footer>
         <p>&copy; 2024 MindCare. All rights reserved.</p>
     </footer>
     <script>
 // Navigation Active Link Handler
 document.addEventListener('DOMContentLoaded', function() {
-    // Get current page filename
     const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-    
-    // Get all navigation links
     const navLinks = document.querySelectorAll('nav ul li a');
-    
-    // Remove active class from all links
     navLinks.forEach(link => {
         link.classList.remove('active');
     });
-    
-    // Add active class to current page link
     navLinks.forEach(link => {
         let href = link.getAttribute('href');
-        
-        // Handle root/index cases
         if ((currentPage === '' || currentPage === 'index.html') && 
             (href === 'index.html' || href === './')) {
             link.classList.add('active');

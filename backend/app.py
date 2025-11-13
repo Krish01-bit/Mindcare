@@ -50,7 +50,7 @@ except:
     print("⚠️ Gemini API key not configured - AI features may not work")
 
 # ============================================
-# Database Models
+# Database Models (Matches your schema.sql)
 # ============================================
 
 class User(db.Model):
@@ -179,10 +179,10 @@ def get_ai_response(user_message, emotion, user):
     Current user name: {user.name}"""
     
     try:
-        model = genai.GenerativeModel('gemini-2.5-flash') # Using 1.5-flash
+        model = genai.GenerativeModel('gemini-2.5-flash') # Using 2.5 flash as requested
         response = model.generate_content(f"{system_prompt}\n\nUser: {user_message}")
         response_time = int((time.time() - start_time) * 1000)
-        return response.text, 'gemini-1.5-flash', response_time
+        return response.text, 'gemini-2.5-flash', response_time
     except Exception as e:
         print(f"Gemini error: {e}")
         return get_huggingface_response(user_message, emotion, user, start_time)
@@ -195,7 +195,7 @@ def get_huggingface_response(user_message, emotion, user, start_time):
             "https://router.huggingface.co/hf-inference",
             headers={"Authorization": f"Bearer {os.getenv('HF_API_TOKEN')}"},
             json={
-                "model": os.getenv("HF_MODEL"),
+                "model": os.getenv("HF_MODEL"), # Should be mistralai/Mistral-7B-Instruct-v0.1
                 "inputs": f"User feeling {emotion} says: {user_message}",
                 "parameters": {
                     "max_new_tokens": 200,
@@ -227,7 +227,7 @@ def get_huggingface_response(user_message, emotion, user, start_time):
     return "I'm here to listen and support you.", 'fallback', response_time
 
 # ============================================
-# Authentication Routes
+# Authentication & User Routes
 # ============================================
 
 @app.route('/user/register', methods=['POST'])
@@ -235,14 +235,24 @@ def register():
     """User registration"""
     data = request.get_json()
     
-    if not data or not data.get('email') or not data.get('password') or not data.get('name'):
+    # --- UPDATED: Get all fields from signup form ---
+    if not data or not data.get('email') or not data.get('password') or not data.get('name') or not data.get('age') or not data.get('employmentStatus'):
         return jsonify({'message': 'Missing required fields'}), 400
     
     if User.query.filter_by(email=data['email']).first():
         return jsonify({'message': 'Email already registered'}), 409
     
     try:
-        user = User(name=data['name'], email=data['email'])
+        # --- UPDATED: Create user with preferences ---
+        user = User(
+            name=data['name'], 
+            email=data['email'],
+            preferences={
+                "age": data.get('age'),
+                "employment_status": data.get('employmentStatus'),
+                "survey_complete": False # Mark survey as incomplete
+            }
+        )
         user.set_password(data['password'])
         db.session.add(user)
         db.session.commit()
@@ -277,13 +287,53 @@ def login():
     user.last_login = datetime.utcnow()
     db.session.commit()
     
+    # --- UPDATED: Check if survey is needed ---
+    survey_needed = True
+    if user.preferences and user.preferences.get('survey_complete'):
+        survey_needed = False
+    
     return jsonify({
         'message': 'Login successful',
         'token': token,
         'user_id': user.id,
         'name': user.name,
-        'email': user.email
+        'email': user.email,
+        'survey_needed': survey_needed # Send this flag to the frontend
     }), 200
+
+# --- NEW: Endpoint to save survey data ---
+@app.route('/user/survey', methods=['POST'])
+@token_required
+def save_survey(current_user):
+    """Save user survey data"""
+    data = request.get_json()
+    
+    if not data:
+        return jsonify({'message': 'No survey data provided'}), 400
+        
+    try:
+        # Get existing preferences (age, employment)
+        preferences = current_user.preferences or {}
+        
+        # Add new survey data to it
+        preferences['occupation'] = data.get('occupation')
+        preferences['discovery_source'] = data.get('discoverySource')
+        preferences['wellness_rating'] = data.get('wellnessRating')
+        preferences['concerns'] = data.get('concerns')
+        preferences['daily_usage'] = data.get('dailyUsage')
+        preferences['survey_complete'] = True # Mark as complete
+        
+        # Update the user object
+        current_user.preferences = preferences
+        current_user.bio = data.get('goals') # Use the 'bio' field for goals
+        
+        db.session.commit()
+        
+        return jsonify({'message': 'Survey data saved successfully'}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'message': str(e)}), 500
+# --- END NEW ---
 
 # ============================================
 # Conversation Routes
@@ -348,7 +398,6 @@ def chat(current_user):
                 return jsonify({'message': 'Conversation not found'}), 404
         
         # === NEW FEATURE: UPDATE TITLE ===
-        # If title is default, update it with the first user message
         if (conversation.title == 'New Chat' or conversation.title == 'Chat Session') and user_message:
             conversation.title = (user_message[:50] + '...') if len(user_message) > 50 else user_message
         # ================================
@@ -432,9 +481,14 @@ def get_chat_history(current_user, conversation_id):
 @token_required
 def get_conversations(current_user):
     """Get all conversations"""
-    conversations = Conversation.query.filter_by(user_id=current_user.id).order_by(
+    # === UPDATED QUERY: Only get conversations with messages ===
+    conversations = Conversation.query.filter(
+        Conversation.user_id == current_user.id,
+        Conversation.message_count > 0  
+    ).order_by(
         Conversation.started_at.desc()
     ).all()
+    # =========================================================
     
     return jsonify({
         'total_conversations': len(conversations),
@@ -504,13 +558,10 @@ def get_mood_stats(current_user, user_id):
         date_str = emotion_record.detected_at.date().isoformat()
         emotion_name = emotion_record.emotion
         
-        # Populate overall counts
         emotion_counts[emotion_name] = emotion_counts.get(emotion_name, 0) + 1
         
-        # Populate daily data (check if date is in our dict)
         if date_str in daily_data:
             daily_data[date_str][emotion_name] = daily_data[date_str].get(emotion_name, 0) + 1
-    # ==========================================
 
     return jsonify({
         'emotion_counts': emotion_counts,

@@ -5,23 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Doctor Prescription - MindCare</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif !important; }
+    </style>
 </head>
 <body>
-    <!-- Navigation -->
     <nav>
     <ul>
-        <li><a href="login.html" class="signin-link">Sign In</a></li>
         <li><a href="index.html">Home</a></li>
         <li><a href="chatbot.html">Chatbot</a></li>
         <li><a href="community.html">WhatsApp Community</a></li>
         <li><a href="premium.html">Premium</a></li>
         <li><a href="prescription.html" class="active">Doctor Prescription</a></li>
         <li><a href="about.html">About Us</a></li>
-    </ul>
+
+        <li class="nav-button-container">
+            <a href="login.html" class="nav-button login">Log In</a>
+            <a href="signup.html" class="nav-button signup">Sign Up</a>
+        </li>
+        </ul>
     </nav>
 
 
-    <!-- Page Content -->
     <div class="container">
         <div class="content-box">
             <h2>🏥 Doctor Prescription</h2>
@@ -52,8 +60,29 @@
         </div>
     </div>
 
-    <!-- Footer -->
     <footer>
         <p><strong>Crisis Support:</strong> If you're in immediate danger, please call your local emergency services or crisis hotline.</p>
         <p>&copy; 2024 MindCare. All rights reserved.</p>
-        <p>Remember: You ma
+        <p>Remember: You matter, and your feelings are valid.</p>
+    </footer>
+    <script>
+// Navigation Active Link Handler
+document.addEventListener('DOMContentLoaded', function() {
+    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    const navLinks = document.querySelectorAll('nav ul li a');
+    navLinks.forEach(link => {
+        link.classList.remove('active');
+    });
+    navLinks.forEach(link => {
+        let href = link.getAttribute('href');
+        if ((currentPage === '' || currentPage === 'index.html') && 
+            (href === 'index.html' || href === './')) {
+            link.classList.add('active');
+        } else if (href === currentPage) {
+            link.classList.add('active');
+        }
+    });
+});
+</script>
+</body>
+</html>

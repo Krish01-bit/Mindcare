@@ -5,660 +5,717 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Chatbot - MindCare</title>
     <link rel="stylesheet" href="style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+
     <style>
-/* INTEGRATED DASHBOARD STYLES */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-:root {
-    --primary: #6366f1;
-    --primary-light: #818cf8;
-    --primary-dark: #4f46e5;
-    --bg-light: #f8f9fb;
-    --bg-white: #ffffff;
-    --text-dark: #1f2937;
-    --text-light: #6b7280;
-    --border: #e5e7eb;
-    --success: #10b981;
-    --error: #ef4444;
-}
-
-body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
-    background-color: var(--bg-light);
-    color: var(--text-dark);
-    line-height: 1.6;
-    margin: 0;
-    padding: 0;
-}
-
-/* Loading Spinner */
-.loading-spinner {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    gap: 16px;
-    z-index: 9999;
-}
-
-.spinner {
-    width: 40px;
-    height: 40px;
-    border: 4px solid rgba(255, 255, 255, 0.3);
-    border-top: 4px solid white;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    to { transform: rotate(360deg); }
-}
-
-.loading-spinner p {
-    color: white;
-    font-weight: 600;
-}
-
-/* Auth Container */
-.auth-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
-
-.auth-page {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
-
-.auth-card {
-    background: var(--bg-white);
-    border-radius: 16px;
-    padding: 48px;
-    max-width: 420px;
-    width: 100%;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-}
-
-.auth-header {
-    text-align: center;
-    margin-bottom: 32px;
-}
-
-.auth-header h1 {
-    font-size: 32px;
-    font-weight: 700;
-    margin-bottom: 8px;
-    color: var(--text-dark);
-}
-
-.auth-header p {
-    color: var(--text-light);
-    font-size: 14px;
-}
-
-.auth-form {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    margin-bottom: 24px;
-}
-
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.form-group label {
-    font-weight: 600;
-    color: var(--text-dark);
-    font-size: 14px;
-}
-
-.form-group input {
-    padding: 12px;
-    border: 2px solid var(--border);
-    border-radius: 8px;
-    font-size: 14px;
-    transition: all 0.3s;
-}
-
-.form-group input:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-}
-
-.error-message {
-    background-color: #fee2e2;
-    color: var(--error);
-    padding: 12px;
-    border-radius: 8px;
-    font-size: 14px;
-}
-
-.submit-btn {
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-    color: white;
-    border: none;
-    padding: 12px;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 16px;
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.submit-btn:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 16px rgba(99, 102, 241, 0.3);
-}
-
-.submit-btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-.auth-footer {
-    text-align: center;
-    color: var(--text-light);
-    font-size: 14px;
-}
-
-.auth-footer a {
-    color: var(--primary);
-    text-decoration: none;
-    font-weight: 600;
-    cursor: pointer;
-}
-
-/* Dashboard */
-.dashboard {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    background-color: var(--bg-light);
-}
-
-.dashboard-header {
-    background: var(--bg-white);
-    padding: 24px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid var(--border);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-}
-
-.header-left h1 {
-    font-size: 28px;
-    margin-bottom: 4px;
-}
-
-.header-left p {
-    color: var(--text-light);
-    font-size: 14px;
-}
-
-.logout-btn {
-    background: #fee2e2;
-    color: var(--error);
-    border: none;
-    padding: 10px 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: all 0.3s;
-}
-
-.logout-btn:hover {
-    background: var(--error);
-    color: white;
-}
-
-.dashboard-nav {
-    background: var(--bg-white);
-    padding: 0 24px;
-    display: flex;
-    gap: 16px;
-    border-bottom: 1px solid var(--border);
-}
-
-.nav-btn {
-    background: none;
-    border: none;
-    padding: 16px 0;
-    cursor: pointer;
-    color: var(--text-light);
-    font-weight: 600;
-    border-bottom: 3px solid transparent;
-    transition: all 0.2s;
-}
-
-.nav-btn:hover {
-    color: var(--primary);
-}
-
-.nav-btn.active {
-    color: var(--primary);
-    border-bottom-color: var(--primary);
-}
-
-.dashboard-main {
-    display: grid;
-    grid-template-columns: 350px 1fr;
-    gap: 24px;
-    padding: 24px;
-    flex: 1;
-    overflow: hidden;
-}
-
-.dashboard-left {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-    overflow-y: auto;
-    padding-right: 12px;
-}
-
-.dashboard-right {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    background: var(--bg-white);
-    border-radius: 12px;
-    padding: 24px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    overflow: hidden;
-}
-
-.tab-content {
-    display: none;
-    flex: 1;
-    overflow-y: auto;
-}
-
-.tab-content.active {
-    display: flex;
-    flex-direction: column;
-}
-
-.emotion-detector, .mood-chart, .community-section {
-    background: var(--bg-white);
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-}
-
-.emotion-detector h3, .mood-chart h3, .community-section h3 {
-    font-size: 18px;
-    margin-bottom: 16px;
-    color: var(--text-dark);
-}
-
-.emotion-display {
-    text-align: center;
-    padding: 16px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-radius: 8px;
-    margin-bottom: 16px;
-    color: white;
-}
-
-.emotion-label {
-    font-size: 12px;
-    opacity: 0.9;
-}
-
-.emotion-value {
-    font-size: 28px;
-    font-weight: 700;
-    margin-top: 4px;
-}
-
-.camera-btn {
-    width: 100%;
-    background: var(--primary);
-    color: white;
-    border: none;
-    padding: 10px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: all 0.3s;
-}
-
-.camera-btn:hover {
-    background: var(--primary-dark);
-}
-
-.detector-note {
-    font-size: 12px;
-    color: var(--text-light);
-    text-align: center;
-    margin-top: 12px;
-}
-
-.community-section {
-    text-align: center;
-}
-
-.whatsapp-btn {
-    width: 100%;
-    background: #25d366;
-    color: white;
-    padding: 10px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: 600;
-    transition: all 0.3s;
-    display: inline-block;
-}
-
-.whatsapp-btn:hover {
-    background: #20ba58;
-}
-
-.chat-box {
-    flex: 1;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    padding-right: 8px;
-}
-
-.empty-state {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-    color: var(--text-light);
-    text-align: center;
-    flex: 1;
-    font-size: 18px;
-}
-
-.message {
-    display: flex;
-    margin-bottom: 12px;
-    animation: slideIn 0.3s ease;
-}
-
-.message.user {
-    justify-content: flex-end;
-}
-
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
+    /* INTEGRATED DASHBOARD STYLES */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
     }
-    to {
-        opacity: 1;
-        transform: translateY(0);
+
+    :root {
+        --primary: #6366f1;
+        --primary-light: #818cf8;
+        --primary-dark: #4f46e5;
+        --bg-light: #f8f9fb;
+        --bg-white: #ffffff;
+        --text-dark: #1f2937;
+        --text-light: #6b7280;
+        --border: #e5e7eb;
+        --success: #10b981;
+        --error: #ef4444;
     }
-}
 
-.message-content {
-    max-width: 70%;
-    padding: 12px 16px;
-    border-radius: 12px;
-}
-
-.message.user .message-content {
-    background: var(--primary);
-    color: white;
-}
-
-.message.bot .message-content {
-    background: var(--border);
-    color: var(--text-dark);
-}
-
-.message-time {
-    font-size: 11px;
-    opacity: 0.7;
-    margin-top: 4px;
-    display: block;
-}
-
-.chat-input-section {
-    display: flex;
-    gap: 12px;
-    padding-top: 16px;
-    border-top: 1px solid var(--border);
-}
-
-.chat-input-section input {
-    flex: 1;
-    padding: 12px 16px;
-    border: 2px solid var(--border);
-    border-radius: 24px;
-    font-size: 14px;
-    transition: all 0.3s;
-}
-
-.chat-input-section input:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-}
-
-.send-btn {
-    background: var(--primary);
-    color: white;
-    border: none;
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s;
-    font-size: 20px;
-}
-
-.send-btn:hover:not(:disabled) {
-    background: var(--primary-dark);
-    transform: scale(1.05);
-}
-
-.send-btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 16px;
-    margin-bottom: 32px;
-}
-
-.stat-card {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 20px;
-    border-radius: 12px;
-    text-align: center;
-}
-
-.stat-card h4 {
-    font-size: 14px;
-    opacity: 0.9;
-    margin-bottom: 8px;
-}
-
-.stat-value {
-    font-size: 32px;
-    font-weight: 700;
-}
-
-.analytics-section {
-    background: #f8f9fb;
-    padding: 16px;
-    border-radius: 8px;
-}
-
-.analytics-section h3 {
-    font-size: 16px;
-    margin-bottom: 16px;
-    color: var(--text-dark);
-}
-
-.history-container {
-    display: grid;
-    grid-template-columns: 300px 1fr;
-    gap: 24px;
-    flex: 1;
-    overflow: hidden;
-}
-
-.conversations-list, .messages-display {
-    background: #f8f9fb;
-    border-radius: 8px;
-    padding: 16px;
-    overflow-y: auto;
-}
-
-.conversations-list h3 {
-    font-size: 16px;
-    margin-bottom: 16px;
-    color: var(--text-dark);
-}
-
-.conversation-item {
-    padding: 12px;
-    background: white;
-    border-radius: 8px;
-    margin-bottom: 12px;
-    cursor: pointer;
-    transition: all 0.2s;
-    border-left: 4px solid transparent;
-}
-
-.conversation-item:hover {
-    background: #f0f4f8;
-}
-
-.conversation-item.active {
-    background: #e0e7ff;
-    border-left-color: var(--primary);
-}
-
-@media (max-width: 1024px) {
-    .dashboard-main {
-        grid-template-columns: 1fr;
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: var(--bg-light);
+        color: var(--text-dark);
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
     }
-    .dashboard-left {
-        display: none;
-    }
-    .history-container {
-        grid-template-columns: 1fr;
-    }
-}
 
-@media (max-width: 768px) {
-    .auth-card {
-        padding: 32px 20px;
+    .material-symbols-rounded {
+      font-variation-settings:
+      'FILL' 0,
+      'wght' 400,
+      'GRAD' 0,
+      'opsz' 24;
+      font-size: 22px; 
+      vertical-align: middle; 
     }
-    .dashboard-header {
+
+    /* Loading Spinner */
+    .loading-spinner {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
         flex-direction: column;
         gap: 16px;
-        align-items: flex-start;
+        z-index: 9999;
     }
-    .dashboard-main {
-        padding: 16px;
+
+    .spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid rgba(255, 255, 255, 0.3);
+        border-top: 4px solid white;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
     }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    .loading-spinner p {
+        color: white;
+        font-weight: 600;
+    }
+
+    /* Auth Container */
+    .auth-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .auth-page {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .auth-card {
+        background: var(--bg-white);
+        border-radius: 16px;
+        padding: 48px;
+        max-width: 420px;
+        width: 100%;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    }
+
+    .auth-header {
+        text-align: center;
+        margin-bottom: 32px;
+    }
+
+    .auth-header h1 {
+        font-size: 32px;
+        font-weight: 700;
+        margin-bottom: 8px;
+        color: var(--text-dark);
+    }
+
+    .auth-header p {
+        color: var(--text-light);
+        font-size: 14px;
+    }
+
+    .auth-form {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        margin-bottom: 24px;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .form-group label {
+        font-weight: 600;
+        color: var(--text-dark);
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .form-group label .material-symbols-rounded {
+        font-size: 20px;
+        margin-right: 4px;
+    }
+
+    .form-group input {
+        padding: 12px;
+        border: 2px solid var(--border);
+        border-radius: 8px;
+        font-size: 14px;
+        transition: all 0.3s;
+        font-family: 'Inter', sans-serif; 
+    }
+
+    .form-group input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    }
+
+    .error-message {
+        background-color: #fee2e2;
+        color: var(--error);
+        padding: 12px;
+        border-radius: 8px;
+        font-size: 14px;
+    }
+
+    .submit-btn {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        color: white;
+        border: none;
+        padding: 12px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 16px;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+        font-family: 'Inter', sans-serif; 
+    }
+
+    .submit-btn:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(99, 102, 241, 0.3);
+    }
+
+    .submit-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+    .auth-footer {
+        text-align: center;
+        color: var(--text-light);
+        font-size: 14px;
+    }
+
+    .auth-footer a {
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    /* Dashboard */
+    .dashboard {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        background-color: var(--bg-light);
+    }
+
+    .dashboard-header {
+        background: var(--bg-white);
+        padding: 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid var(--border);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .header-left h1 {
+        font-size: 28px;
+        margin-bottom: 4px;
+    }
+
+    .header-left p {
+        color: var(--text-light);
+        font-size: 14px;
+    }
+
+    .logout-btn {
+        background: #fee2e2;
+        color: var(--error);
+        border: none;
+        padding: 10px 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s;
+        font-family: 'Inter', sans-serif; 
+    }
+
+    .logout-btn:hover {
+        background: var(--error);
+        color: white;
+    }
+
     .dashboard-nav {
-        flex-wrap: wrap;
+        background: var(--bg-white);
+        padding: 0 24px;
+        display: flex;
+        gap: 16px;
+        border-bottom: 1px solid var(--border);
     }
+
+    .nav-btn {
+        background: none;
+        border: none;
+        padding: 16px 0;
+        cursor: pointer;
+        color: var(--text-light);
+        font-weight: 600;
+        border-bottom: 3px solid transparent;
+        transition: all 0.2s;
+        font-family: 'Inter', sans-serif; 
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .nav-btn .material-symbols-rounded {
+        font-size: 20px;
+    }
+
+    .nav-btn:hover {
+        color: var(--primary);
+    }
+
+    .nav-btn.active {
+        color: var(--primary);
+        border-bottom-color: var(--primary);
+    }
+
+    .dashboard-main {
+        display: grid;
+        grid-template-columns: 350px 1fr;
+        gap: 24px;
+        padding: 24px;
+        flex: 1;
+        overflow: hidden;
+    }
+
+    .dashboard-left {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        overflow-y: auto;
+        padding-right: 12px;
+    }
+
     .dashboard-right {
-        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        background: var(--bg-white);
+        border-radius: 12px;
+        padding: 24px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
     }
-}
 
-::-webkit-scrollbar {
-    width: 8px;
-}
+    .tab-content {
+        display: none;
+        flex: 1;
+        overflow-y: auto;
+    }
 
-::-webkit-scrollbar-track {
-    background: transparent;
-}
+    .tab-content.active {
+        display: flex;
+        flex-direction: column;
+    }
 
-::-webkit-scrollbar-thumb {
-    background: var(--border);
-    border-radius: 4px;
-}
+    .emotion-detector, .mood-chart, .community-section {
+        background: var(--bg-white);
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
 
-::-webkit-scrollbar-thumb:hover {
-    background: var(--text-light);
-}
+    .emotion-detector h3, .mood-chart h3, .community-section h3 {
+        font-size: 18px;
+        margin-bottom: 16px;
+        color: var(--text-dark);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
 
-.modal-overlay {
-    display: none; 
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    align-items: center;
-    justify-content: center;
-    z-index: 10000;
-}
-.modal-overlay.show {
-    display: flex; 
-}
-.modal-content {
-    background: var(--bg-white);
-    padding: 24px 32px;
-    border-radius: 12px;
-    max-width: 400px;
-    width: 90%;
-    text-align: center;
-    position: relative;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    animation: modal-fade-in 0.3s ease;
-}
-.modal-close-btn {
-    position: absolute;
-    top: 10px;
-    right: 14px;
-    background: none;
-    border: none;
-    font-size: 24px;
-    color: var(--text-light);
-    cursor: pointer;
-}
-.modal-content h3 {
-    font-size: 22px;
-    color: var(--text-dark);
-    margin-bottom: 0;
-}
-@keyframes modal-fade-in {
-    from { opacity: 0; transform: scale(0.95); }
-    to { opacity: 1; transform: scale(1); }
-}
+    .emotion-display {
+        text-align: center;
+        padding: 16px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 8px;
+        margin-bottom: 16px;
+        color: white;
+    }
+
+    .emotion-label {
+        font-size: 12px;
+        opacity: 0.9;
+    }
+
+    .emotion-value {
+        font-size: 28px;
+        font-weight: 700;
+        margin-top: 4px;
+    }
+
+    .camera-btn {
+        width: 100%;
+        background: var(--primary);
+        color: white;
+        border: none;
+        padding: 10px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s;
+        font-family: 'Inter', sans-serif; 
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+    
+    .camera-btn .material-symbols-rounded {
+        font-size: 20px;
+    }
+
+    .camera-btn:hover {
+        background: var(--primary-dark);
+    }
+
+    .detector-note {
+        font-size: 12px;
+        color: var(--text-light);
+        text-align: center;
+        margin-top: 12px;
+    }
+
+    .community-section {
+        text-align: center;
+    }
+
+    .whatsapp-btn {
+        width: 100%;
+        background: #25d366;
+        color: white;
+        padding: 10px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s;
+        display: inline-block;
+        font-family: 'Inter', sans-serif; 
+    }
+
+    .whatsapp-btn:hover {
+        background: #20ba58;
+    }
+
+    .chat-box {
+        flex: 1;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        padding-right: 8px;
+    }
+
+    .empty-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        color: var(--text-light);
+        text-align: center;
+        flex: 1;
+        font-size: 18px;
+    }
+
+    .message {
+        display: flex;
+        margin-bottom: 12px;
+        animation: slideIn 0.3s ease;
+    }
+
+    .message.user {
+        justify-content: flex-end;
+    }
+
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .message-content {
+        max-width: 70%;
+        padding: 12px 16px;
+        border-radius: 12px;
+    }
+
+    .message.user .message-content {
+        background: var(--primary);
+        color: white;
+    }
+
+    .message.bot .message-content {
+        background: var(--border);
+        color: var(--text-dark);
+    }
+
+    .message-time {
+        font-size: 11px;
+        opacity: 0.7;
+        margin-top: 4px;
+        display: block;
+    }
+
+    .chat-input-section {
+        display: flex;
+        gap: 12px;
+        padding-top: 16px;
+        border-top: 1px solid var(--border);
+    }
+
+    .chat-input-section input {
+        flex: 1;
+        padding: 12px 16px;
+        border: 2px solid var(--border);
+        border-radius: 24px;
+        font-size: 14px;
+        transition: all 0.3s;
+        font-family: 'Inter', sans-serif; 
+    }
+
+    .chat-input-section input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    }
+
+    .send-btn {
+        background: var(--primary);
+        color: white;
+        border: none;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+        font-size: 20px;
+    }
+    
+    .send-btn .material-symbols-rounded {
+        font-size: 20px;
+    }
+
+    .send-btn:hover:not(:disabled) {
+        background: var(--primary-dark);
+        transform: scale(1.05);
+    }
+
+    .send-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px;
+        margin-bottom: 32px;
+    }
+
+    .stat-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 12px;
+        text-align: center;
+    }
+
+    .stat-card h4 {
+        font-size: 14px;
+        opacity: 0.9;
+        margin-bottom: 8px;
+    }
+
+    .stat-value {
+        font-size: 32px;
+        font-weight: 700;
+    }
+
+    .analytics-section {
+        background: #f8f9fb;
+        padding: 16px;
+        border-radius: 8px;
+    }
+
+    .analytics-section h3 {
+        font-size: 16px;
+        margin-bottom: 16px;
+        color: var(--text-dark);
+    }
+
+    .history-container {
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        gap: 24px;
+        flex: 1;
+        overflow: hidden;
+    }
+
+    .conversations-list, .messages-display {
+        background: #f8f9fb;
+        border-radius: 8px;
+        padding: 16px;
+        overflow-y: auto;
+    }
+
+    .conversations-list h3 {
+        font-size: 16px;
+        margin-bottom: 16px;
+        color: var(--text-dark);
+    }
+
+    .conversation-item {
+        padding: 12px;
+        background: white;
+        border-radius: 8px;
+        margin-bottom: 12px;
+        cursor: pointer;
+        transition: all 0.2s;
+        border-left: 4px solid transparent;
+    }
+
+    .conversation-item:hover {
+        background: #f0f4f8;
+    }
+
+    .conversation-item.active {
+        background: #e0e7ff;
+        border-left-color: var(--primary);
+    }
+
+    @media (max-width: 1024px) {
+        .dashboard-main {
+            grid-template-columns: 1fr;
+        }
+        .dashboard-left {
+            display: none;
+        }
+        .history-container {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .auth-card {
+            padding: 32px 20px;
+        }
+        .dashboard-header {
+            flex-direction: column;
+            gap: 16px;
+            align-items: flex-start;
+        }
+        .dashboard-main {
+            padding: 16px;
+        }
+        .dashboard-nav {
+            flex-wrap: wrap;
+        }
+        .dashboard-right {
+            padding: 16px;
+        }
+    }
+
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--text-light);
+    }
+
+    /* Modal Styles */
+    .modal-overlay {
+        display: none; 
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+        opacity: 0;
+        transition: opacity 0.2s ease-in-out;
+    }
+    .modal-overlay.show {
+        display: flex; 
+        opacity: 1;
+    }
+    .modal-content {
+        background: var(--bg-white);
+        padding: 24px 32px;
+        border-radius: 12px;
+        max-width: 450px;
+        width: 90%;
+        text-align: center;
+        position: relative;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        animation: modal-fade-in 0.3s ease;
+    }
+    .modal-close-btn {
+        position: absolute;
+        top: 10px;
+        right: 14px;
+        background: none;
+        border: none;
+        font-size: 24px;
+        color: var(--text-light);
+        cursor: pointer;
+    }
+    .modal-content h3 {
+        font-size: 22px;
+        color: var(--text-dark);
+        margin-bottom: 0;
+    }
+    @keyframes modal-fade-in {
+        from { opacity: 0; transform: scale(0.95); }
+        to { opacity: 1; transform: scale(1); }
+    }
     </style>
 </head>
 <body>
@@ -676,18 +733,18 @@ body {
                 </div>
                 <form id="loginForm" class="auth-form">
                     <div class="form-group">
-                        <label for="loginEmail">📧 Email</label>
+                        <label for="loginEmail"><span class="material-symbols-rounded">mail</span> Email</label>
                         <input type="email" id="loginEmail" placeholder="you@example.com" required>
                     </div>
                     <div class="form-group">
-                        <label for="loginPassword">🔒 Password</label>
+                        <label for="loginPassword"><span class="material-symbols-rounded">lock</span> Password</label>
                         <input type="password" id="loginPassword" placeholder="••••••••" required>
                     </div>
                     <div id="loginError" class="error-message" style="display: none;"></div>
                     <button type="submit" class="submit-btn">Log In</button>
                 </form>
                 <p class="auth-footer">
-                    Don't have an account? <a href="signup.html">Sign up</a> | <a href="index.html">Back to Home</a>
+                    Don't have an account? <a href="#" onclick="showRegister()">Sign up</a>
                 </p>
             </div>
         </div>
@@ -700,19 +757,19 @@ body {
                 </div>
                 <form id="registerForm" class="auth-form">
                     <div class="form-group">
-                        <label for="registerName">👤 Full Name</label>
+                        <label for="registerName"><span class="material-symbols-rounded">person</span> Full Name</label>
                         <input type="text" id="registerName" placeholder="John Doe" required>
                     </div>
                     <div class="form-group">
-                        <label for="registerEmail">📧 Email</label>
+                        <label for="registerEmail"><span class="material-symbols-rounded">mail</span> Email</label>
                         <input type="email" id="registerEmail" placeholder="you@example.com" required>
                     </div>
                     <div class="form-group">
-                        <label for="registerPassword">🔒 Password</label>
+                        <label for="registerPassword"><span class="material-symbols-rounded">lock</span> Password</label>
                         <input type="password" id="registerPassword" placeholder="••••••••" required>
                     </div>
                     <div class="form-group">
-                        <label for="registerConfirmPassword">🔒 Confirm Password</label>
+                        <label for="registerConfirmPassword"><span class="material-symbols-rounded">lock</span> Confirm Password</label>
                         <input type="password" id="registerConfirmPassword" placeholder="••••••••" required>
                     </div>
                     <div id="registerError" class="error-message" style="display: none;"></div>
@@ -735,33 +792,33 @@ body {
         </div>
 
         <div class="dashboard-nav">
-            <button class="nav-btn active" onclick="switchTab('chat')">💬 Chat</button>
-            <button class="nav-btn" onclick="switchTab('analytics')">📊 Analytics</button>
-            <button class="nav-btn" onclick="switchTab('history')">📋 History</button>
+            <button class="nav-btn active" onclick="switchTab('chat')"><span class="material-symbols-rounded">chat</span>Chat</button>
+            <button class="nav-btn" onclick="switchTab('analytics')"><span class="material-symbols-rounded">bar_chart</span>Analytics</button>
+            <button class="nav-btn" onclick="switchTab('history')"><span class="material-symbols-rounded">history</span>History</button>
         </div>
 
         <div class="dashboard-main">
             <div class="dashboard-left">
                 <div class="emotion-detector">
-                    <h3>😊 Emotion Detector</h3>
+                    <h3><span class="material-symbols-rounded">sentiment_satisfied</span>Emotion Detector</h3>
                     <div class="emotion-display">
                         <p class="emotion-label">Current Emotion</p>
                         <p id="emotionValue" class="emotion-value">Neutral</p>
                     </div>
-                    <button id="cameraBtn" class="camera-btn" onclick="toggleCamera()">📷 Start Camera</button>
+                    <button id="cameraBtn" class="camera-btn" onclick="toggleCamera()"><span class="material-symbols-rounded">videocam</span> Start Camera</button>
                     <video id="cameraVideo" autoplay style="display: none; width: 100%; border-radius: 8px; margin-top: 12px;"></video>
                     <p class="detector-note">*Face detection happens locally. No images are uploaded.</p>
                 </div>
 
                 <div class="mood-chart">
-                    <h3>📈 7-Day Mood Summary</h3>
+                    <h3><span class="material-symbols-rounded">show_chart</span>7-Day Mood Summary</h3>
                     <div id="moodChartContainer" style="height: 200px; background: #f0f4f8; border-radius: 8px; padding: 16px;">
                         <p style="text-align: center; color: #999;">Loading mood data...</p>
                     </div>
                 </div>
 
                 <div class="community-section">
-                    <h3>⚡ Join Our Community</h3>
+                    <h3><span class="material-symbols-rounded">groups</span>Join Our Community</h3>
                     <p>Connect with others on a similar journey</p>
                     <a href="#" class="whatsapp-btn" onclick="openWhatsAppModal(event)">Join WhatsApp Support Group</a>
                 </div>
@@ -771,14 +828,15 @@ body {
                 <div id="chatTab" class="tab-content active">
                     <div class="chat-box" id="chatBox">
                         <div class="empty-state">
-                            <h2>Hello! 👋</h2>
+                            <span class="material-symbols-rounded" style="font-size: 48px; color: var(--primary);">waving_hand</span>
+                            <h2>Hello!</h2>
                             <p>I'm here to listen and support you.</p>
                             <p>Share whatever's on your mind.</p>
                         </div>
                     </div>
                     <div class="chat-input-section">
                         <input type="text" id="messageInput" placeholder="Share your thoughts... (Press Enter to send)" onkeypress="if(event.key==='Enter') sendMessage()">
-                        <button class="send-btn" onclick="sendMessage()">➤</button>
+                        <button class="send-btn" onclick="sendMessage()"><span class="material-symbols-rounded">send</span></button>
                     </div>
                 </div>
 
@@ -841,17 +899,32 @@ body {
     <div id="whatsappModal" class="modal-overlay" onclick="closeWhatsAppModal()">
         <div class="modal-content" onclick="event.stopPropagation()">
             <button class="modal-close-btn" onclick="closeWhatsAppModal()">&times;</button>
-            <h3>⚡ Join Our Community</h3>
+            <h3><span class="material-symbols-rounded">groups</span> Join Our Community</h3>
             <p style="color: var(--text-light); margin: 16px 0;">Connect with others on a similar journey in our private WhatsApp support group.</p>
-            
             <a href="https://chat.whatsapp.com/YOUR_INVITE_LINK" target="_blank" class="whatsapp-btn">Join Now</a>
+        </div>
+    </div>
+
+    <div id="welcomeModal" class="modal-overlay">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close-btn" onclick="closeWelcomeModal()">&times;</button>
+            <h3><span class="material-symbols-rounded">waving_hand</span> Welcome to MindCare!</h3>
+            <p style="color: var(--text-light); margin: 16px 0; text-align: left;">
+                Before you begin, here are a few things to know:
+            </p>
+            <ul style="text-align: left; color: var(--text-dark); margin-left: 20px; margin-bottom: 24px; font-size: 0.9rem; line-height: 1.7;">
+                <li><strong style="color: var(--primary);">I'm an AI Assistant:</strong> I'm here to listen and help, but I'm not a human therapist.</li>
+                <li><strong style="color: var(--primary);">Emotion Detection:</strong> To personalize our chat, I'll ask for permission to use your webcam. This is <strong>100% private.</strong> No images or videos ever leave your computer.</li>
+                <li><strong style="color: var(--primary);">Secure Storage:</strong> Your chat history is encrypted and stored securely so you can review it later. It is never shared with anyone.</li>
+            </ul>
+            <button class="submit-btn" style="width: 100%;" onclick="closeWelcomeModal()">I Understand, Let's Start</button>
         </div>
     </div>
 
 
     <script>
 // COMPLETE INTEGRATED JAVASCRIPT
-const API_URL = 'http://localhost:5000'; // CHANGE THIS TO YOUR BACKEND URL
+const API_URL = 'http://localhost:5000'; 
 let authToken = localStorage.getItem('authToken');
 let currentUser = localStorage.getItem('currentUser') ? JSON.parse(localStorage.getItem('currentUser')) : null;
 let currentEmotion = 'neutral';
@@ -874,9 +947,6 @@ window.addEventListener('DOMContentLoaded', () => {
         loadMoodStats(); 
         startNewConversation(); 
     } else {
-        // --- NEW: Check which page we are on ---
-        // If we are on chatbot.html AND not logged in, show the login UI
-        // Otherwise, if we're on index.html etc., do nothing.
         if (window.location.pathname.endsWith('chatbot.html')) {
             showLogin();
         }
@@ -888,7 +958,6 @@ function showLogin() {
     document.getElementById('dashboardContainer').style.display = 'none';
     document.getElementById('loginPage').style.display = 'flex';
     document.getElementById('registerPage').style.display = 'none';
-    // Attach listener to the form *inside* chatbot.html
     const loginForm = document.getElementById('loginForm');
     if (loginForm) {
         loginForm.addEventListener('submit', handleLogin);
@@ -898,7 +967,6 @@ function showLogin() {
 function showRegister() {
     document.getElementById('loginPage').style.display = 'none';
     document.getElementById('registerPage').style.display = 'flex';
-     // Attach listener to the form *inside* chatbot.html
     const registerForm = document.getElementById('registerForm');
     if(registerForm) {
         registerForm.addEventListener('submit', handleRegister);
@@ -910,8 +978,14 @@ function showDashboard() {
     document.getElementById('dashboardContainer').style.display = 'flex';
     document.getElementById('welcomeText').textContent = `Welcome, ${currentUser.name}! 💙`;
 
-    // --- NEW: Auto-start the camera ---
-    toggleCamera();
+    // Check if welcome modal should be shown
+    if (!sessionStorage.getItem('welcomeModalShown')) {
+        // If it's the first visit this session, show the modal
+        openWelcomeModal();
+    } else {
+        // Otherwise, just auto-start the camera
+        toggleCamera(); 
+    }
 }
 
 async function handleLogin(e) {
@@ -937,9 +1011,12 @@ async function handleLogin(e) {
         localStorage.setItem('currentUser', JSON.stringify(currentUser));
         document.getElementById('loginForm').reset();
         errorDiv.style.display = 'none';
-        showDashboard();
+        
+        // This function will now be called AFTER login
+        showDashboard(); 
         startNewConversation();
         loadMoodStats();
+
     } catch (err) {
         errorDiv.textContent = err.message;
         errorDiv.style.display = 'block';
@@ -966,7 +1043,9 @@ async function handleRegister(e) {
         const response = await fetch(`${API_URL}/user/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, email, password })
+            // Note: This only sends name, email, password. 
+            // The /register endpoint in app.py must match this.
+            body: JSON.stringify({ name, email, password }) 
         });
         if (!response.ok) {
             const data = await response.json();
@@ -992,9 +1071,6 @@ function logout() {
     
     if (isCameraOn) toggleCamera(); // Turn off camera
     
-    // --- UPDATED: Redirect to login page ---
-    // Instead of just clearing the chat, we'll reload the page.
-    // The 'DOMContentLoaded' listener will see no token and call showLogin().
     window.location.reload(); 
 }
 
@@ -1014,10 +1090,14 @@ async function startNewConversation() {
         if (response.ok) {
             const data = await response.json();
             currentConversationId = data.conversation_id;
-            document.getElementById('chatBox').innerHTML = '<div class="empty-state"><h2>Hello! 👋</h2><p>I\'m here to listen and support you.</p><p>Share whatever\'s on your mind.</p></div>';
+            document.getElementById('chatBox').innerHTML = '<div class="empty-state"><span class="material-symbols-rounded" style="font-size: 48px; color: var(--primary);">waving_hand</span><h2>Hello!</h2><p>I\'m here to listen and support you.</p><p>Share whatever\'s on your mind.</p></div>';
         }
-    } catch (err)
-        console.error('Error starting conversation:', err);
+    } catch (err) {
+        if (err instanceof Error) {
+            console.error('Error starting conversation:', err.message);
+        } else {
+            console.error('An unknown error occurred:', err);
+        }
     }
 }
 
@@ -1068,7 +1148,7 @@ async function sendMessage() {
 function addMessageToChat(content, role) {
     const chatBox = document.getElementById('chatBox');
     const emptyState = chatBox.querySelector('.empty-state');
-    if (emptyState) empty.remove();
+    if (emptyState) emptyState.remove();
     const messageDiv = document.createElement('div');
     messageDiv.className = `message ${role}`;
     const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -1099,12 +1179,11 @@ async function toggleCamera() {
             video.srcObject = cameraStream;
             video.style.display = 'block';
             isCameraOn = true;
-            btn.textContent = '⏹️ Stop Camera';
+            btn.innerHTML = '<span class="material-symbols-rounded">videocam_off</span> Stop Camera';
             detectEmotion();
         } catch (err) {
             console.error('Camera permission denied or camera not available.', err);
-            // Don't alert, just log. Silently fail if user denies.
-            btn.textContent = '📷 Start Camera';
+            btn.innerHTML = '<span class="material-symbols-rounded">videocam</span> Start Camera';
             video.style.display = 'none';
             isCameraOn = false;
         }
@@ -1114,7 +1193,7 @@ async function toggleCamera() {
         }
         video.style.display = 'none';
         isCameraOn = false;
-        btn.textContent = '📷 Start Camera';
+        btn.innerHTML = '<span class="material-symbols-rounded">videocam</span> Start Camera';
     }
 }
 
@@ -1398,6 +1477,19 @@ function displayMessages(messages) {
 
 function showLoading(show) {
     document.getElementById('loadingSpinner').style.display = show ? 'flex' : 'none';
+}
+
+// === Modal Functions ===
+
+function openWelcomeModal() {
+    document.getElementById('welcomeModal').classList.add('show');
+}
+
+function closeWelcomeModal() {
+    document.getElementById('welcomeModal').classList.remove('show');
+    sessionStorage.setItem('welcomeModalShown', 'true');
+    // Start the camera *after* user clicks "I Understand"
+    toggleCamera(); 
 }
 
 function openWhatsAppModal(event) {

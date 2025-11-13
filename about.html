@@ -5,22 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Us - MindCare</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif !important; }
+    </style>
 </head>
 <body>
-    <!-- Navigation -->
     <nav>
     <ul>
-        <li><a href="login.html" class="signin-link">Sign In</a></li>
         <li><a href="index.html">Home</a></li>
         <li><a href="chatbot.html">Chatbot</a></li>
         <li><a href="community.html">WhatsApp Community</a></li>
         <li><a href="premium.html">Premium</a></li>
         <li><a href="prescription.html">Doctor Prescription</a></li>
         <li><a href="about.html" class="active">About Us</a></li>
-    </ul>
+
+        <li class="nav-button-container">
+            <a href="login.html" class="nav-button login">Log In</a>
+            <a href="signup.html" class="nav-button signup">Sign Up</a>
+        </li>
+        </ul>
 </nav>
 
-    <!-- Page Content -->
     <div class="container">
         <div class="content-box">
             <h2>❤️ About MindCare</h2>
@@ -49,7 +57,6 @@
         </div>
     </div>
 
-    <!-- Footer -->
     <footer>
         <p><strong>Crisis Support:</strong> If you're in immediate danger, please call your local emergency services or crisis hotline.</p>
         <p>&copy; 2024 MindCare. All rights reserved.</p>
@@ -59,22 +66,13 @@
 <script>
 // Navigation Active Link Handler
 document.addEventListener('DOMContentLoaded', function() {
-    // Get current page filename
     const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-    
-    // Get all navigation links
     const navLinks = document.querySelectorAll('nav ul li a');
-    
-    // Remove active class from all links
     navLinks.forEach(link => {
         link.classList.remove('active');
     });
-    
-    // Add active class to current page link
     navLinks.forEach(link => {
         let href = link.getAttribute('href');
-        
-        // Handle root/index cases
         if ((currentPage === '' || currentPage === 'index.html') && 
             (href === 'index.html' || href === './')) {
             link.classList.add('active');

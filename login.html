@@ -4,9 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Log In - MindCare</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css"> 
     <link rel="stylesheet" href="auth.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+
     <style>
+        /* Apply Font & Icon Styles */
+        body {
+            font-family: 'Inter', sans-serif !important;
+        }
+        .material-symbols-rounded {
+          font-variation-settings:
+          'FILL' 0,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 24;
+          font-size: 20px;
+          vertical-align: middle;
+          margin-right: 4px;
+        }
+        .form-group label {
+            display: flex;
+            align-items: center;
+        }
         .error-message {
             background-color: #fee2e2;
             color: #ef4444;
@@ -20,14 +44,17 @@
 <body>
     <nav>
      <ul>
-        <li><a href="login.html" class="signin-link active">Sign In</a></li>
         <li><a href="index.html">Home</a></li>
         <li><a href="chatbot.html">Chatbot</a></li>
         <li><a href="community.html">WhatsApp Community</a></li>
         <li><a href="premium.html">Premium</a></li>
         <li><a href="prescription.html">Doctor Prescription</a></li>
         <li><a href="about.html">About Us</a></li>
-     </ul>
+
+        <li class="nav-button-container">
+            <a href="login.html" class="nav-button login active">Log In</a> <a href="signup.html" class="nav-button signup">Sign Up</a>
+        </li>
+        </ul>
     </nav>
 
     <div class="auth-container">
@@ -39,12 +66,12 @@
                 <div id="loginError" class="error-message" style="display: none;"></div>
 
                 <div class="form-group">
-                    <label for="loginEmail">Email Address</label>
+                    <label for="loginEmail"><span class="material-symbols-rounded">mail</span>Email Address</label>
                     <input type="email" id="loginEmail" name="loginEmail" required placeholder="your.email@example.com">
                 </div>
 
                 <div class="form-group">
-                    <label for="loginPassword">Password</label>
+                    <label for="loginPassword"><span class="material-symbols-rounded">lock</span>Password</label>
                     <input type="password" id="loginPassword" name="loginPassword" required placeholder="Enter your password">
                 </div>
 
@@ -76,7 +103,6 @@
             const errorDiv = document.getElementById('loginError');
             const loginButton = document.getElementById('loginButton');
 
-            // Show loading state
             loginButton.disabled = true;
             loginButton.textContent = 'Logging In...';
             errorDiv.style.display = 'none';
@@ -93,13 +119,9 @@
                 const data = await response.json();
 
                 if (!response.ok) {
-                    // Show error message from backend (e.g., "Invalid credentials")
                     throw new Error(data.message || 'Login failed. Please try again.');
                 }
 
-                // --- SUCCESS ---
-                // This is the "connection" you wanted.
-                // We save the token and user data from the backend.
                 localStorage.setItem('authToken', data.token);
                 localStorage.setItem('currentUser', JSON.stringify({
                     id: data.user_id,
@@ -107,12 +129,13 @@
                     email: data.email
                 }));
 
-                // Now, redirect to the chatbot page.
-                // It will see the token and show the dashboard!
-                window.location.href = 'chatbot.html';
+                if (data.survey_needed) {
+                    window.location.href = 'survey.html';
+                } else {
+                    window.location.href = 'chatbot.html';
+                }
 
             } catch (err) {
-                // Show any error to the user
                 errorDiv.textContent = err.message;
                 errorDiv.style.display = 'block';
                 loginButton.disabled = false;
@@ -120,11 +143,12 @@
             }
         }
     </script>
+
     <footer>
         <p>&copy; 2024 MindCare. All rights reserved.</p>
     </footer>
     <script>
-// Navigation Active Link Handler (This script is fine)
+// Navigation Active Link Handler
 document.addEventListener('DOMContentLoaded', function() {
     const currentPage = window.location.pathname.split('/').pop() || 'index.html';
     const navLinks = document.querySelectorAll('nav ul li a');

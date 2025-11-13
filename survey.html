@@ -6,22 +6,61 @@
     <title>Wellness Assessment - MindCare</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="auth.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+    <style>
+        /* Apply Font & Icon Styles */
+        body {
+            font-family: 'Inter', sans-serif !important;
+        }
+        .material-symbols-rounded {
+          font-variation-settings:
+          'FILL' 0,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 24;
+          font-size: 20px;
+          vertical-align: middle;
+          margin-right: 4px;
+        }
+        .form-group label {
+            display: flex;
+            align-items: center;
+        }
+        .auth-box {
+            max-width: 600px; /* Make survey box wider */
+        }
+        .error-message {
+            background-color: #fee2e2;
+            color: #ef4444;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+    </style>
 </head>
 <body>
-    <!-- Navigation -->
     <nav>
     <ul>
-        <li><a href="login.html" class="signin-link">Sign In</a></li>
         <li><a href="index.html">Home</a></li>
         <li><a href="chatbot.html">Chatbot</a></li>
         <li><a href="community.html">WhatsApp Community</a></li>
         <li><a href="premium.html">Premium</a></li>
         <li><a href="prescription.html">Doctor Prescription</a></li>
         <li><a href="about.html">About Us</a></li>
-    </ul>
+
+        <li class="nav-button-container">
+            <a href="login.html" class="nav-button login">Log In</a>
+            <a href="signup.html" class="nav-button signup">Sign Up</a>
+        </li>
+        </ul>
     </nav>
 
-    <!-- Survey Form -->
     <div class="auth-container">
         <div class="auth-box survey-box">
             <h2>Initial Wellness Assessment</h2>
@@ -30,15 +69,15 @@
             
             <form id="surveyForm" onsubmit="handleSurvey(event)">
                 
-                <!-- Question 1: Occupation -->
+                <div id="surveyError" class="error-message" style="display: none;"></div>
+
                 <div class="form-group">
-                    <label for="occupation">What is your primary occupation or field of study?</label>
+                    <label for="occupation"><span class="material-symbols-rounded">work</span>What is your primary occupation or field of study?</label>
                     <input type="text" id="occupation" name="occupation" required placeholder="e.g., Software Engineer, Medical Student, Teacher">
                 </div>
 
-                <!-- Question 2: Discovery Source -->
                 <div class="form-group">
-                    <label for="discoverySource">How did you discover MindCare?</label>
+                    <label for="discoverySource"><span class="material-symbols-rounded">search</span>How did you discover MindCare?</label>
                     <select id="discoverySource" name="discoverySource" required>
                         <option value="">Please select</option>
                         <option value="social-media">Social Media (Instagram, Facebook, Twitter)</option>
@@ -52,65 +91,32 @@
                     </select>
                 </div>
 
-                <!-- Question 3: Mental Wellness Rating -->
                 <div class="form-group">
-                    <label for="wellnessRating">On a scale of 1-10, how would you rate your current mental wellness? (1 = Very Low, 10 = Excellent)</label>
+                    <label for="wellnessRating"><span class="material-symbols-rounded">sentiment_satisfied</span>On a scale of 1-10, how would you rate your current mental wellness? (1 = Very Low, 10 = Excellent)</label>
                     <div class="rating-container">
                         <input type="range" id="wellnessRating" name="wellnessRating" min="1" max="10" value="5" oninput="updateRatingValue(this.value)">
                         <span id="ratingValue" class="rating-value">5</span>
                     </div>
                 </div>
 
-                <!-- Question 4: Primary Concerns -->
                 <div class="form-group">
-                    <label>What are your primary concerns? (Select all that apply)</label>
+                    <label><span class="material-symbols-rounded">checklist</span>What are your primary concerns? (Select all that apply)</label>
                     <div class="checkbox-list">
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="concerns" value="stress">
-                            <span>Stress and Anxiety</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="concerns" value="depression">
-                            <span>Feeling Down or Depressed</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="concerns" value="sleep">
-                            <span>Sleep Difficulties</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="concerns" value="relationships">
-                            <span>Relationship Issues</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="concerns" value="work-pressure">
-                            <span>Work or Academic Pressure</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="concerns" value="loneliness">
-                            <span>Loneliness or Isolation</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="concerns" value="self-esteem">
-                            <span>Low Self-Esteem or Confidence</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="concerns" value="trauma">
-                            <span>Past Trauma or Grief</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="concerns" value="general-wellness">
-                            <span>General Mental Wellness Maintenance</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" name="concerns" value="other">
-                            <span>Other</span>
-                        </label>
+                        <label class="checkbox-item"><input type="checkbox" name="concerns" value="stress"><span>Stress and Anxiety</span></label>
+                        <label class="checkbox-item"><input type="checkbox" name="concerns" value="depression"><span>Feeling Down or Depressed</span></label>
+                        <label class="checkbox-item"><input type="checkbox" name="concerns" value="sleep"><span>Sleep Difficulties</span></label>
+                        <label class="checkbox-item"><input type="checkbox" name="concerns" value="relationships"><span>Relationship Issues</span></label>
+                        <label class="checkbox-item"><input type="checkbox" name="concerns" value="work-pressure"><span>Work or Academic Pressure</span></label>
+                        <label class="checkbox-item"><input type="checkbox" name="concerns" value="loneliness"><span>Loneliness or Isolation</span></label>
+                        <label class="checkbox-item"><input type="checkbox" name="concerns" value="self-esteem"><span>Low Self-Esteem or Confidence</span></label>
+                        <label class="checkbox-item"><input type="checkbox" name="concerns" value="trauma"><span>Past Trauma or Grief</span></label>
+                        <label class="checkbox-item"><input type="checkbox" name="concerns" value="general-wellness"><span>General Mental Wellness Maintenance</span></label>
+                        <label class="checkbox-item"><input type="checkbox" name="concerns" value="other"><span>Other</span></label>
                     </div>
                 </div>
 
-                <!-- Question 5: Daily Usage Intent -->
                 <div class="form-group">
-                    <label for="dailyUsage">How much time do you plan to spend on MindCare daily?</label>
+                    <label for="dailyUsage"><span class="material-symbols-rounded">schedule</span>How much time do you plan to spend on MindCare daily?</label>
                     <select id="dailyUsage" name="dailyUsage" required>
                         <option value="">Please select</option>
                         <option value="5-10-min">5-10 minutes</option>
@@ -122,24 +128,33 @@
                     </select>
                 </div>
 
-                <!-- Question 6: Goals -->
                 <div class="form-group">
-                    <label for="goals">What do you hope to achieve with MindCare? (Optional)</label>
-                    <textarea id="goals" name="goals" rows="4" placeholder="Share your goals or what you're looking for in mental health support..."></textarea>
+                    <label for="goals"><span class="material-symbols-rounded">flag</span>What do you hope to achieve with MindCare? (Optional)</label>
+                    <textarea id="goals" name="goals" rows="4" placeholder="Share your goals or what you're looking for..."></textarea>
                 </div>
 
-                <button type="submit" class="auth-button">Complete Assessment</button>
+                <button type="submit" class="auth-button" id="surveyButton">Complete Assessment</button>
             </form>
         </div>
     </div>
 
     <script>
+        const API_URL = 'http://localhost:5000';
+
         function updateRatingValue(value) {
             document.getElementById('ratingValue').textContent = value;
         }
 
-        function handleSurvey(event) {
+        async function handleSurvey(event) {
             event.preventDefault();
+
+            // Get the auth token. We must be logged in to be here.
+            const authToken = localStorage.getItem('authToken');
+            if (!authToken) {
+                alert('You are not logged in. Redirecting to login page.');
+                window.location.href = 'login.html';
+                return;
+            }
             
             // Get selected concerns
             const concerns = [];
@@ -154,46 +169,59 @@
                 wellnessRating: document.getElementById('wellnessRating').value,
                 concerns: concerns,
                 dailyUsage: document.getElementById('dailyUsage').value,
-                goals: document.getElementById('goals').value,
-                timestamp: new Date().toISOString()
+                goals: document.getElementById('goals').value
             };
 
-            // YOUR FRIEND SHOULD ADD DATABASE STORAGE HERE
-            console.log('Survey Data:', surveyData);
-            
-            // Mark survey as completed (for demo purposes using localStorage)
-            localStorage.setItem('surveyCompleted', 'true');
-            
-            alert('Thank you for completing the assessment! Your personalized experience is ready.');
-            
-            // Redirect to chatbot
-            window.location.href = 'chatbot.html';
+            const errorDiv = document.getElementById('surveyError');
+            const surveyButton = document.getElementById('surveyButton');
+            surveyButton.disabled = true;
+            surveyButton.textContent = 'Saving...';
+            errorDiv.style.display = 'none';
+
+            try {
+                // Call the new backend endpoint
+                const response = await fetch(`${API_URL}/user/survey`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}` // Send the token
+                    },
+                    body: JSON.stringify(surveyData)
+                });
+
+                if (!response.ok) {
+                    const data = await response.json();
+                    throw new Error(data.message || 'Failed to save survey');
+                }
+
+                // --- SUCCESS ---
+                alert('Thank you! Your personalized experience is ready.');
+                
+                // Redirect to the main chatbot app
+                window.location.href = 'chatbot.html';
+
+            } catch (err) {
+                errorDiv.textContent = err.message;
+                errorDiv.style.display = 'block';
+                surveyButton.disabled = false;
+                surveyButton.textContent = 'Complete Assessment';
+            }
         }
     </script>
 
-    <!-- Footer -->
     <footer>
         <p>&copy; 2024 MindCare. All rights reserved.</p>
     </footer>
     <script>
 // Navigation Active Link Handler
 document.addEventListener('DOMContentLoaded', function() {
-    // Get current page filename
     const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-    
-    // Get all navigation links
     const navLinks = document.querySelectorAll('nav ul li a');
-    
-    // Remove active class from all links
     navLinks.forEach(link => {
         link.classList.remove('active');
     });
-    
-    // Add active class to current page link
     navLinks.forEach(link => {
         let href = link.getAttribute('href');
-        
-        // Handle root/index cases
         if ((currentPage === '' || currentPage === 'index.html') && 
             (href === 'index.html' || href === './')) {
             link.classList.add('active');
