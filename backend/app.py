@@ -285,19 +285,22 @@ def login():
     user.last_login = datetime.utcnow()
     db.session.commit()
     
-    # Check if survey is needed
     survey_needed = True
     if user.preferences and user.preferences.get('survey_complete'):
         survey_needed = False
     
+    # === UPDATED: Send all user data to the frontend ===
     return jsonify({
         'message': 'Login successful',
         'token': token,
         'user_id': user.id,
         'name': user.name,
         'email': user.email,
-        'survey_needed': survey_needed # Send this flag to the frontend
+        'preferences': user.preferences, # Send preferences
+        'bio': user.bio,             # Send bio (for goals)
+        'survey_needed': survey_needed 
     }), 200
+    # ==================================================
 
 @app.route('/user/survey', methods=['POST'])
 @token_required
@@ -309,20 +312,17 @@ def save_survey(current_user):
         return jsonify({'message': 'No survey data provided'}), 400
         
     try:
-        # Get existing preferences (age, employment)
         preferences = current_user.preferences or {}
         
-        # Add new survey data to it
         preferences['occupation'] = data.get('occupation')
         preferences['discovery_source'] = data.get('discoverySource')
         preferences['wellness_rating'] = data.get('wellnessRating')
         preferences['concerns'] = data.get('concerns')
         preferences['daily_usage'] = data.get('dailyUsage')
-        preferences['survey_complete'] = True # Mark as complete
+        preferences['survey_complete'] = True 
         
-        # Update the user object
         current_user.preferences = preferences
-        current_user.bio = data.get('goals') # Use the 'bio' field for goals
+        current_user.bio = data.get('goals') 
         
         db.session.commit()
         

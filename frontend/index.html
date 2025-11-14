@@ -9,11 +9,23 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
     <style>
-        body { font-family: 'Inter', sans-serif !important; }
-        .feature-card { cursor: pointer; transition: all 0.3s ease; }
-        .feature-card:hover { transform: translateY(-8px) !important; box-shadow: 0 12px 30px rgba(0,0,0,0.2) !important; }
-        .feature-card small { display: inline-block; margin-top: 0.5rem; }
+        body {
+            font-family: 'Inter', sans-serif !important;
+        }
+        .feature-card {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-8px) !important;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.2) !important;
+        }
+        .feature-card small {
+            display: inline-block;
+            margin-top: 0.5rem;
+        }
     </style>
 </head>
 <body>
@@ -85,21 +97,85 @@
         </div>
     </div>
 
+    <!-- === Profile Modal HTML === -->
+    <div id="profileModal" class="modal-overlay" onclick="closeProfileModal()">
+        <div class="modal-content profile-modal" onclick="event.stopPropagation()">
+            <button class="modal-close-btn" onclick="closeProfileModal()">&times;</button>
+            <h3>My Profile</h3>
+            
+            <div class="profile-picture-container">
+                <div id="profileImagePreview">
+                    <span class="material-symbols-rounded">person</span>
+                </div>
+                <input type="file" id="profileImageUpload" accept="image/*" style="display: none;">
+                <button class="change-photo-btn" onclick="document.getElementById('profileImageUpload').click()">
+                    Upload Photo
+                </button>
+            </div>
+
+            <div class="profile-details">
+                <p>
+                    <label>Full Name</label>
+                    <span id="profileName">Loading...</span>
+                </p>
+                <p>
+                    <label>Email</label>
+                    <span id="profileEmail">Loading...</span>
+                </p>
+                <p>
+                    <label>Age</label>
+                    <span id="profileAge">Loading...</span>
+                </p>
+                <p>
+                    <label>Employment Status</label>
+                    <span id="profileStatus">Loading...</span>
+                </p>
+            </div>
+            
+            <button class="logout-btn-profile" onclick="globalLogout()">Log Out</button>
+        </div>
+    </div>
+    <!-- ======================= -->
+
     <footer>
         <p><strong>Crisis Support:</strong> If you're in immediate danger, please call your local emergency services or crisis hotline.</p>
         <p>© 2025 XP Hunters. All rights reserved.</p>
         <p>Remember: You matter, and your feelings are valid.</p>
     </footer>
 
+    <!-- === Smart Navigation & Modal Script === -->
     <script>
-        // Global Logout Function
+        let currentUser = localStorage.getItem('currentUser') ? JSON.parse(localStorage.getItem('currentUser')) : null;
+
         function globalLogout() {
             localStorage.removeItem('authToken');
             localStorage.removeItem('currentUser');
+            localStorage.removeItem('profileImage'); 
             window.location.href = 'index.html'; 
         }
 
-        // Navigation Active Link Handler
+        function openProfileModal(event) {
+            if(event) event.preventDefault(); 
+            if (currentUser) {
+                document.getElementById('profileName').textContent = currentUser.name || 'Not Set';
+                document.getElementById('profileEmail').textContent = currentUser.email || 'Not Set';
+                document.getElementById('profileAge').textContent = currentUser.preferences?.age || 'Not Set';
+                document.getElementById('profileStatus').textContent = currentUser.preferences?.employment_status || 'Not Set';
+            }
+            const savedImage = localStorage.getItem('profileImage');
+            const preview = document.getElementById('profileImagePreview');
+            if (savedImage) {
+                 preview.innerHTML = `<img src="${savedImage}" alt="Profile Photo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+            } else {
+                preview.innerHTML = `<span class="material-symbols-rounded">person</span>`;
+            }
+            document.getElementById('profileModal').classList.add('show');
+        }
+
+        function closeProfileModal() {
+            document.getElementById('profileModal').classList.remove('show');
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             const authToken = localStorage.getItem('authToken');
             const navLinks = document.querySelectorAll('nav ul li a');
@@ -107,7 +183,7 @@
             if (authToken) {
                 const navButtonContainer = document.querySelector('.nav-button-container');
                 if (navButtonContainer) {
-                    navButtonContainer.innerHTML = '<a href="#" onclick="globalLogout()" class="nav-button login">Log Out</a>';
+                    navButtonContainer.innerHTML = '<a href="#" onclick="openProfileModal(event)" class="nav-button login">Profile</a>';
                 }
                 const ctaButton = document.getElementById('cta-signup-button');
                 const ctaLoginLink = document.getElementById('cta-login-link');
@@ -115,6 +191,22 @@
                 if (ctaLoginLink) ctaLoginLink.style.display = 'none';
             }
             
+            const profileImageUpload = document.getElementById('profileImageUpload');
+            if (profileImageUpload) {
+                profileImageUpload.addEventListener('change', function(event) {
+                    const file = event.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            const preview = document.getElementById('profileImagePreview');
+                            preview.innerHTML = `<img src="${e.target.result}" alt="Profile Photo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+                            localStorage.setItem('profileImage', e.target.result);
+                        }
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+
             const currentPage = window.location.pathname.split('/').pop() || 'index.html';
             navLinks.forEach(link => {
                 link.classList.remove('active');

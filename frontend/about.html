@@ -42,9 +42,6 @@
             <h3 style="color: #667eea; margin-top: 2rem; margin-bottom: 1rem;">Why We Built This</h3>
             <p>Mental health issues affect millions of people worldwide, but many don't have access to immediate support. Whether it's due to cost, availability, or stigma, too many people suffer in silence. We created MindCare to bridge this gap and provide compassionate, confidential support 24/7.</p>
 
-            <h3 style="color: #667eea; margin-top: 2rem; margin-bottom: 1rem;">Our Approach</h3>
-            <p>We combine advanced AI technology with evidence-based therapeutic techniques to provide meaningful support. Our chatbot is trained to be empathetic, understanding, and non-judgmental. We also connect users with professional mental health services when needed.</p>
-
             <h3 style="color: #667eea; margin-top: 2rem; margin-bottom: 1rem;">Our Values</h3>
             <p><strong>Compassion:</strong> We treat every user with empathy and understanding<br>
                <strong>Privacy:</strong> Your conversations are completely confidential<br>
@@ -58,7 +55,25 @@
                Phone: +91 81220 83807 | +91 93448 56434 | +91 82259 26604</p>
         </div>
     </div>
-
+    
+    <div id="profileModal" class="modal-overlay" onclick="closeProfileModal()">
+        <div class="modal-content profile-modal" onclick="event.stopPropagation()">
+            <button class="modal-close-btn" onclick="closeProfileModal()">&times;</button>
+            <h3>My Profile</h3>
+            <div class="profile-picture-container">
+                <div id="profileImagePreview"><span class="material-symbols-rounded">person</span></div>
+                <input type="file" id="profileImageUpload" accept="image/*" style="display: none;">
+                <button class="change-photo-btn" onclick="document.getElementById('profileImageUpload').click()">Upload Photo</button>
+            </div>
+            <div class="profile-details">
+                <p><label>Full Name</label><span id="profileName">Loading...</span></p>
+                <p><label>Email</label><span id="profileEmail">Loading...</span></p>
+                <p><label>Age</label><span id="profileAge">Loading...</span></p>
+                <p><label>Employment Status</label><span id="profileStatus">Loading...</span></p>
+            </div>
+            <button class="logout-btn-profile" onclick="globalLogout()">Log Out</button>
+        </div>
+    </div>
     <footer>
         <p><strong>Crisis Support:</strong> If you're in immediate danger, please call your local emergency services or crisis hotline.</p>
         <p>© 2025 XP Hunters. All rights reserved.</p>
@@ -66,20 +81,64 @@
     </footer>
 
 <script>
+    let currentUser = localStorage.getItem('currentUser') ? JSON.parse(localStorage.getItem('currentUser')) : null;
+
     function globalLogout() {
         localStorage.removeItem('authToken');
         localStorage.removeItem('currentUser');
+        localStorage.removeItem('profileImage'); 
         window.location.href = 'index.html'; 
     }
+
+    function openProfileModal(event) {
+        if(event) event.preventDefault(); 
+        if (currentUser) {
+            document.getElementById('profileName').textContent = currentUser.name || 'Not Set';
+            document.getElementById('profileEmail').textContent = currentUser.email || 'Not Set';
+            document.getElementById('profileAge').textContent = currentUser.preferences?.age || 'Not Set';
+            document.getElementById('profileStatus').textContent = currentUser.preferences?.employment_status || 'Not Set';
+        }
+        const savedImage = localStorage.getItem('profileImage');
+        const preview = document.getElementById('profileImagePreview');
+        if (savedImage) {
+             preview.innerHTML = `<img src="${savedImage}" alt="Profile Photo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+        } else {
+            preview.innerHTML = `<span class="material-symbols-rounded">person</span>`;
+        }
+        document.getElementById('profileModal').classList.add('show');
+    }
+
+    function closeProfileModal() {
+        document.getElementById('profileModal').classList.remove('show');
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         const authToken = localStorage.getItem('authToken');
         const navLinks = document.querySelectorAll('nav ul li a');
+        
         if (authToken) {
             const navButtonContainer = document.querySelector('.nav-button-container');
             if (navButtonContainer) {
-                navButtonContainer.innerHTML = '<a href="#" onclick="globalLogout()" class="nav-button login">Log Out</a>';
+                navButtonContainer.innerHTML = '<a href="#" onclick="openProfileModal(event)" class="nav-button login">Profile</a>';
             }
         }
+        
+        const profileImageUpload = document.getElementById('profileImageUpload');
+        if (profileImageUpload) {
+            profileImageUpload.addEventListener('change', function(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const preview = document.getElementById('profileImagePreview');
+                        preview.innerHTML = `<img src="${e.target.result}" alt="Profile Photo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+                        localStorage.setItem('profileImage', e.target.result);
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
         const currentPage = window.location.pathname.split('/').pop() || 'index.html';
         navLinks.forEach(link => {
             link.classList.remove('active');

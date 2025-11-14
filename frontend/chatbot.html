@@ -52,7 +52,7 @@
       vertical-align: middle; 
     }
 
-    /* Loading Spinner */
+    /* Loading Spinner (Full screen, now only used for initial login) */
     .loading-spinner {
         position: fixed;
         top: 0;
@@ -85,6 +85,25 @@
         color: white;
         font-weight: 600;
     }
+    
+    .submit-btn {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        color: white;
+        border: none;
+        padding: 12px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 16px;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+        font-family: 'Inter', sans-serif; 
+    }
+
+    .submit-btn:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(99, 102, 241, 0.3);
+    }
+
 
     /* Dashboard */
     .dashboard {
@@ -96,7 +115,7 @@
 
     .dashboard-header {
         background: var(--bg-white);
-        padding: 24px;
+        padding: 16px 24px; 
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -104,17 +123,66 @@
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
 
+    .header-left {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem; 
+    }
+
+    /* Back Button Style */
+    .back-to-home-btn {
+        text-decoration: none;
+        color: var(--primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.5rem;
+        border-radius: 50%;
+        transition: background-color 0.2s;
+    }
+    .back-to-home-btn:hover {
+        background-color: #f8f9fb;
+    }
+    .back-to-home-btn .material-symbols-rounded {
+        font-size: 24px;
+        font-weight: 600;
+    }
+
     .header-left h1 {
-        font-size: 28px;
-        margin-bottom: 4px;
+        font-size: 24px; 
+        margin-bottom: 0;
     }
 
     .header-left p {
         color: var(--text-light);
         font-size: 14px;
+        margin-top: 2px;
     }
 
-    .logout-btn {
+    /* Profile Button */
+    .profile-btn {
+        background: var(--bg-light);
+        color: var(--text-dark);
+        border: 1px solid var(--border);
+        padding: 10px 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s;
+        font-family: 'Inter', sans-serif; 
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .profile-btn:hover {
+        background-color: var(--border);
+    }
+    .profile-btn .material-symbols-rounded {
+        font-size: 20px;
+    }
+    
+    /* Logout Button (inside modal) */
+    .logout-btn-profile {
         background: #fee2e2;
         color: var(--error);
         border: none;
@@ -125,11 +193,11 @@
         transition: all 0.3s;
         font-family: 'Inter', sans-serif; 
     }
-
-    .logout-btn:hover {
+    .logout-btn-profile:hover {
         background: var(--error);
         color: white;
     }
+
 
     .dashboard-nav {
         background: var(--bg-white);
@@ -585,6 +653,148 @@
         from { opacity: 0; transform: scale(0.95); }
         to { opacity: 1; transform: scale(1); }
     }
+
+    /* Pie Chart Styles */
+    .pie-chart-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 2rem;
+        flex-wrap: wrap; 
+        padding: 1rem 0;
+    }
+    .pie-chart {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        flex-shrink: 0;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .pie-legend {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-size: 0.9rem;
+    }
+    .legend-color-box {
+        width: 16px;
+        height: 16px;
+        border-radius: 4px;
+        flex-shrink: 0;
+    }
+    .legend-label {
+        color: var(--text-dark);
+        font-weight: 600;
+        text-transform: capitalize;
+    }
+    .legend-percent {
+        color: var(--text-light);
+        font-size: 0.85rem;
+    }
+    
+    /* Chatbot Typing Indicator */
+    .typing-indicator {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 12px 0px; 
+        animation: slideIn 0.3s ease;
+    }
+    .typing-indicator span {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        font-style: italic;
+    }
+    .typing-dot-container {
+        display: flex;
+        gap: 4px;
+        padding-top: 8px; 
+    }
+    .typing-dot {
+        width: 8px;
+        height: 8px;
+        background-color: var(--text-light);
+        border-radius: 50%;
+        animation: typing-bounce 1.4s infinite;
+    }
+    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes typing-bounce {
+        0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+        40% { transform: scale(1); opacity: 1; }
+    }
+
+    /* === NEW: Profile Modal Styles === */
+    .profile-modal {
+        max-width: 500px;
+        text-align: left;
+    }
+    .profile-picture-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+    #profileImagePreview {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background-color: var(--border);
+        color: var(--text-light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 4rem;
+        object-fit: cover; /* This makes the uploaded image look good */
+    }
+    #profileImagePreview .material-symbols-rounded {
+        font-size: 64px;
+    }
+    .change-photo-btn {
+        font-family: 'Inter', sans-serif;
+        background: none;
+        border: none;
+        color: var(--primary);
+        font-weight: 600;
+        cursor: pointer;
+        font-size: 0.9rem;
+    }
+    .profile-details {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+    .profile-details p {
+        display: flex;
+        flex-direction: column;
+        font-size: 1rem;
+    }
+    .profile-details label {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--text-light);
+        text-transform: uppercase;
+        margin-bottom: 4px;
+    }
+    .profile-details span {
+        font-size: 1rem;
+        color: var(--text-dark);
+        padding: 10px 12px;
+        background-color: var(--bg-light);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        /* Capitalize text */
+        text-transform: capitalize;
+    }
+    /* ================================= */
     </style>
 </head>
 <body>
@@ -596,10 +806,18 @@
     <div id="dashboardContainer" class="dashboard" style="display: none;">
         <div class="dashboard-header">
             <div class="header-left">
-                <h1 id="welcomeText">Welcome! 💙</h1>
-                <p>Your mental wellness journey</p>
+                <a href="index.html" class="back-to-home-btn" title="Back to Home">
+                    <span class="material-symbols-rounded">arrow_back_ios_new</span>
+                </a>
+                <div>
+                    <h1 id="welcomeText">Welcome!</h1> 
+                    <p>Your mental wellness journey</p>
+                </div>
             </div>
-            <button id="logoutBtn" class="logout-btn" onclick="logout()">Logout</button>
+            <button id="profileBtn" class="profile-btn" onclick="openProfileModal()">
+                <span class="material-symbols-rounded">person</span>
+                Profile
+            </button>
         </div>
 
         <div class="dashboard-nav">
@@ -680,7 +898,7 @@
                     </div>
 
                     <div class="analytics-section" style="margin-top: 16px;">
-                        <h3>Emotion Breakdown (Last 7 Days Summary)</h3>
+                        <h3>Emotion Breakdown (Last 7 Days)</h3>
                         <div id="emotionBreakdown">
                             <p style="color: #999;">Loading analytics...</p>
                         </div>
@@ -712,9 +930,8 @@
             <button class="modal-close-btn" onclick="closeWhatsAppModal()">&times;</button>
             <h3><span class="material-symbols-rounded">groups</span> Join Our Community</h3>
             <p style="color: var(--text-light); margin: 16px 0;">Connect with others on a similar journey in our private WhatsApp support group.</p>
-            
             <a href="https://chat.whatsapp.com/I3kUCH4idI03Zs4nRFBaOl?mode=wwt" target="_blank" class="whatsapp-btn">Join Now</a>
-            </div>
+        </div>
     </div>
 
     <div id="welcomeModal" class="modal-overlay">
@@ -727,13 +944,50 @@
             <ul style="text-align: left; color: var(--text-dark); margin-left: 20px; margin-bottom: 24px; font-size: 0.9rem; line-height: 1.7;">
                 <li><strong style="color: var(--primary);">I'm an AI Assistant:</strong> I'm here to listen and help, but I'm not a human therapist.</li>
                 <li><strong style="color: var(--primary);">Emotion Detection:</strong> To personalize our chat, I'll ask for permission to use your webcam. This is <strong>100% private.</strong> No images or videos ever leave your computer.</li>
-                <li><strong style="color: var(--primary);">Secure Storage:</strong> Your chat history is encrypted and stored securely so you can review it later. It is never shared with anyone.</li>
+                <li><strong style="color: var(--primary);">How Mood Tracking Works:</strong> The emotions I detect (like 'sad' or 'happy') are privately logged. This builds your 'Mood History' in the 'Analytics' tab, helping you see your patterns over time.</li>
+                <li><strong style="color: var(--primary);">Secure Storage:</strong> Your chat history is encrypted and stored securely so you can review it. It is never shared with anyone.</li>
             </ul>
             <button class="submit-btn" style="width: 100%;" onclick="closeWelcomeModal()">I Understand, Let's Start</button>
         </div>
     </div>
+    
+    <div id="profileModal" class="modal-overlay" onclick="closeProfileModal()">
+        <div class="modal-content profile-modal" onclick="event.stopPropagation()">
+            <button class="modal-close-btn" onclick="closeProfileModal()">&times;</button>
+            <h3>My Profile</h3>
+            
+            <div class="profile-picture-container">
+                <div id="profileImagePreview">
+                    <span class="material-symbols-rounded">person</span>
+                </div>
+                <input type="file" id="profileImageUpload" accept="image/*" style="display: none;">
+                <button class="change-photo-btn" onclick="document.getElementById('profileImageUpload').click()">
+                    Upload Photo
+                </button>
+            </div>
 
-
+            <div class="profile-details">
+                <p>
+                    <label>Full Name</label>
+                    <span id="profileName">Loading...</span>
+                </p>
+                <p>
+                    <label>Email</label>
+                    <span id="profileEmail">Loading...</span>
+                </p>
+                <p>
+                    <label>Age</label>
+                    <span id="profileAge">Loading...</span>
+                </p>
+                <p>
+                    <label>Employment Status</label>
+                    <span id="profileStatus">Loading...</span>
+                </p>
+            </div>
+            
+            <button class="logout-btn-profile" style="width: 100%;" onclick="logout()">Log Out</button>
+        </div>
+    </div>
     <script>
 // COMPLETE INTEGRATED JAVASCRIPT
 const API_URL = 'http://localhost:5000'; 
@@ -761,11 +1015,29 @@ window.addEventListener('DOMContentLoaded', () => {
     } else {
         window.location.href = 'login.html';
     }
+
+    // Event listener for profile photo upload
+    const profileImageUpload = document.getElementById('profileImageUpload');
+    if (profileImageUpload) {
+        profileImageUpload.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('profileImagePreview');
+                    preview.innerHTML = `<img src="${e.target.result}" alt="Profile Photo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+                    // Save image to localStorage (simple method for prototype)
+                    localStorage.setItem('profileImage', e.target.result);
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    }
 });
 
 function showDashboard() {
     document.getElementById('dashboardContainer').style.display = 'flex';
-    document.getElementById('welcomeText').textContent = `Welcome, ${currentUser.name}! 💙`;
+    document.getElementById('welcomeText').textContent = `Welcome, ${currentUser.name}!`;
 
     if (!sessionStorage.getItem('welcomeModalShown')) {
         openWelcomeModal();
@@ -777,6 +1049,7 @@ function showDashboard() {
 function logout() {
     localStorage.removeItem('authToken');
     localStorage.removeItem('currentUser');
+    localStorage.removeItem('profileImage'); // Clear profile image
     authToken = null;
     currentUser = null;
     
@@ -824,8 +1097,23 @@ async function sendMessage() {
     addMessageToChat(message, 'user');
     input.value = '';
     
+    const chatBox = document.getElementById('chatBox');
+    const typingIndicator = document.createElement('div');
+    typingIndicator.id = 'typingIndicator';
+    typingIndicator.className = 'typing-indicator';
+    typingIndicator.innerHTML = `
+        <span class="material-symbols-rounded" style="color: var(--primary);">psychology</span>
+        <span>MindCare is typing...</span>
+        <div class="typing-dot-container">
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+        </div>
+    `;
+    chatBox.appendChild(typingIndicator);
+    chatBox.scrollTop = chatBox.scrollHeight;
+
     try {
-        showLoading(true);
         const response = await fetch(`${API_URL}/chat`, {
             method: 'POST',
             headers: {
@@ -838,6 +1126,10 @@ async function sendMessage() {
                 conversation_id: currentConversationId
             })
         });
+
+        const indicator = document.getElementById('typingIndicator');
+        if (indicator) indicator.remove();
+        
         if (response.ok) {
             const data = await response.json();
             addMessageToChat(data.message, 'bot');
@@ -849,10 +1141,11 @@ async function sendMessage() {
              throw new Error('Failed to get response from server');
         }
     } catch (err) {
+        const indicator = document.getElementById('typingIndicator');
+        if (indicator) indicator.remove();
+        
         console.error('Error sending message:', err);
         addMessageToChat('Sorry, there was an error sending your message. Please try again.', 'bot');
-    } finally {
-        showLoading(false);
     }
 }
 
@@ -1015,22 +1308,7 @@ async function loadAnalytics() {
             document.getElementById('weekConversations').textContent = data.last_7_days.conversations;
             document.getElementById('totalConversations').textContent = data.all_time.total_conversations;
             
-            const breakdown = document.getElementById('emotionBreakdown');
-            if (Object.keys(data.last_7_days.emotion_breakdown).length > 0) {
-                let html = '<div style="display: flex; flex-direction: column; gap: 12px;">';
-                Object.entries(data.last_7_days.emotion_breakdown).forEach(([emotion, count]) => {
-                    html += `
-                        <div style="display: flex; justify-content: space-between; padding: 8px; background: #fff; border: 1px solid var(--border); border-radius: 4px;">
-                            <span style="text-transform: capitalize;">${escapeHtml(emotion)}</span>
-                            <strong>${count}</strong>
-                        </div>
-                    `;
-                });
-                html += '</div>';
-                breakdown.innerHTML = html;
-            } else {
-                 breakdown.innerHTML = '<p style="color: #999;">No emotion data for the last 7 days.</p>';
-            }
+            displayPieChart(data.last_7_days.emotion_breakdown);
         }
 
         const moodResponse = await fetch(`${API_URL}/mood_stats/${currentUser.id}`, {
@@ -1044,6 +1322,44 @@ async function loadAnalytics() {
     } catch (err) {
         console.error('Error loading analytics:', err);
     }
+}
+
+function displayPieChart(breakdownData) {
+    const container = document.getElementById('emotionBreakdown');
+
+    if (!breakdownData || Object.keys(breakdownData).length === 0) {
+        container.innerHTML = '<p style="color: #999; text-align: center;">No emotion data for the last 7 days.</p>';
+        return;
+    }
+
+    const total = Object.values(breakdownData).reduce((a, b) => a + b, 0);
+    let cumulativePercent = 0;
+    let gradientString = [];
+    let legendHtml = '';
+
+    Object.entries(breakdownData).forEach(([emotion, count]) => {
+        const color = EMOTION_COLORS[emotion] || '#808080';
+        const percentage = (count / total) * 100;
+        
+        gradientString.push(`${color} ${cumulativePercent}% ${cumulativePercent + percentage}%`);
+        
+        legendHtml += `
+            <div class="legend-item">
+                <div class="legend-color-box" style="background-color: ${color};"></div>
+                <span class="legend-label">${escapeHtml(emotion)}</span>
+                <span class="legend-percent">(${percentage.toFixed(1)}%)</span>
+            </div>
+        `;
+        
+        cumulativePercent += percentage;
+    });
+
+    container.innerHTML = `
+        <div class="pie-chart-container">
+            <div class="pie-chart" style="background: conic-gradient(${gradientString.join(', ')});"></div>
+            <div class="pie-legend">${legendHtml}</div>
+        </div>
+    `;
 }
 
 function displayDailyTrendChart(dailyData) {
@@ -1210,6 +1526,33 @@ function openWhatsAppModal(event) {
 function closeWhatsAppModal() {
     document.getElementById('whatsappModal').classList.remove('show');
 }
+
+// === Profile Modal Functions ===
+function openProfileModal() {
+    // Populate the modal with the user's data from localStorage
+    if (currentUser) {
+        document.getElementById('profileName').textContent = currentUser.name || 'Not Set';
+        document.getElementById('profileEmail').textContent = currentUser.email || 'Not Set';
+        document.getElementById('profileAge').textContent = currentUser.preferences?.age || 'Not Set';
+        document.getElementById('profileStatus').textContent = currentUser.preferences?.employment_status || 'Not Set';
+    }
+
+    // Load saved profile image
+    const savedImage = localStorage.getItem('profileImage');
+    const preview = document.getElementById('profileImagePreview');
+    if (savedImage) {
+         preview.innerHTML = `<img src="${savedImage}" alt="Profile Photo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+    } else {
+        preview.innerHTML = `<span class="material-symbols-rounded">person</span>`;
+    }
+
+    document.getElementById('profileModal').classList.add('show');
+}
+
+function closeProfileModal() {
+    document.getElementById('profileModal').classList.remove('show');
+}
+// =================================
     </script>
 </body>
 </html>

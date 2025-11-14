@@ -94,12 +94,16 @@
                     throw new Error(data.message || 'Login failed. Please try again.');
                 }
 
+                // --- UPDATED: Save the FULL user object ---
                 localStorage.setItem('authToken', data.token);
                 localStorage.setItem('currentUser', JSON.stringify({
                     id: data.user_id,
                     name: data.name,
-                    email: data.email
+                    email: data.email,
+                    preferences: data.preferences, // This now includes age, status, etc.
+                    bio: data.bio
                 }));
+                // -----------------------------------------
 
                 if (data.survey_needed) {
                     window.location.href = 'survey.html';
@@ -115,27 +119,16 @@
             }
         }
     </script>
-
     <footer>
         <p>© 2025 XP Hunters. All rights reserved.</p>
-        </footer>
+    </footer>
     
     <script>
-        function globalLogout() {
-            localStorage.removeItem('authToken');
-            localStorage.removeItem('currentUser');
-            window.location.href = 'index.html'; 
-        }
+        // This page does NOT need the smart nav script, 
+        // as you should always see "Log In / Sign Up"
         document.addEventListener('DOMContentLoaded', function() {
-            const authToken = localStorage.getItem('authToken');
-            const navLinks = document.querySelectorAll('nav ul li a');
-            if (authToken) {
-                const navButtonContainer = document.querySelector('.nav-button-container');
-                if (navButtonContainer) {
-                    navButtonContainer.innerHTML = '<a href="#" onclick="globalLogout()" class="nav-button login">Log Out</a>';
-                }
-            }
             const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+            const navLinks = document.querySelectorAll('nav ul li a');
             navLinks.forEach(link => {
                 link.classList.remove('active');
             });

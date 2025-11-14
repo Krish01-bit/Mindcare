@@ -14,7 +14,6 @@
     
     <style>
         body { font-family: 'Inter', sans-serif !important; }
-        .material-symbols-rounded { font-size: 20px; vertical-align: middle; margin-right: 4px; }
         .content-box h2 { display: flex; align-items: center; gap: 10px; }
         .comparison-table { width: 100%; margin-top: 2rem; border-collapse: collapse; }
         .comparison-table th, .comparison-table td { padding: 1rem; border-bottom: 1px solid #e5e7eb; vertical-align: middle; }
@@ -25,26 +24,9 @@
         .comparison-table .icon-yes { color: var(--success); font-size: 24px; vertical-align: middle; }
         .comparison-table .icon-no { color: #ef4444; font-size: 24px; vertical-align: middle; }
         .comparison-table tr:nth-child(even) { background-color: #f8f9fb; }
-        .modal-overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.6); align-items: center; justify-content: center;
-            z-index: 10000; opacity: 0; transition: opacity 0.2s ease-in-out;
-        }
-        .modal-overlay.show { display: flex; opacity: 1; }
-        .modal-content {
-            background: white; padding: 24px 32px; border-radius: 12px; max-width: 450px;
-            width: 90%; text-align: left; position: relative;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3); animation: modal-fade-in 0.3s ease;
-        }
-        .modal-close-btn {
-            position: absolute; top: 10px; right: 14px; background: none; border: none;
-            font-size: 24px; color: #6b7280; cursor: pointer;
-        }
-        .modal-content h3 { font-size: 22px; color: #1f2937; margin-bottom: 1rem; text-align: center; }
         .modal-content.success-modal { text-align: center; }
         .success-icon { font-size: 48px; color: var(--success); }
         .upi-icon { font-size: 48px; color: #4f46e5; }
-        @keyframes modal-fade-in { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
         .modal-form .form-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1rem; }
         .modal-form .form-group label { font-weight: 600; color: #1f2937; font-size: 0.9rem; }
         .modal-form .form-group input, .modal-form .form-group select {
@@ -148,6 +130,7 @@
         </div>
     </div>
 
+    <!-- Premium Booking Modal -->
     <div id="premiumModal" class="modal-overlay" onclick="closePremiumModal()">
         <div class="modal-content" onclick="event.stopPropagation()">
             <button class="modal-close-btn" onclick="closePremiumModal()">&times;</button>
@@ -177,20 +160,41 @@
                         <option value="yearly">Yearly - ₹999</option>
                     </select>
                 </div>
-                <button type="submit" class="cta-button">Proceed to Payment</button>
+                <button type="submit" class="cta-button" style="font-size: 1rem; padding: 14px;">Proceed to Payment</button>
             </form>
         </div>
     </div>
 
+    <!-- UPI Payment Modal -->
     <div id="upiModal" class="modal-overlay" onclick="closeUpiModal()">
         <div class="modal-content success-modal" onclick="event.stopPropagation()">
             <span class="material-symbols-rounded upi-icon">payments</span>
             <h3>Check your UPI App</h3>
-            <p style="color: var(--text-light); margin: 16px 0;" id="upiModalMessage">
-                </p>
-            <button class="cta-button" style="width: 100%;" onclick="closeUpiModal()">OK</button>
+            <p style="color: var(--text-light); margin: 16px 0;" id="upiModalMessage"></p>
+            <button class="cta-button" style="width: 100%; font-size: 1rem; padding: 14px;" onclick="closeUpiModal()">OK</button>
         </div>
     </div>
+
+    <!-- === Profile Modal HTML === -->
+    <div id="profileModal" class="modal-overlay" onclick="closeProfileModal()">
+        <div class="modal-content profile-modal" onclick="event.stopPropagation()">
+            <button class="modal-close-btn" onclick="closeProfileModal()">&times;</button>
+            <h3>My Profile</h3>
+            <div class="profile-picture-container">
+                <div id="profileImagePreview"><span class="material-symbols-rounded">person</span></div>
+                <input type="file" id="profileImageUpload" accept="image/*" style="display: none;">
+                <button class="change-photo-btn" onclick="document.getElementById('profileImageUpload').click()">Upload Photo</button>
+            </div>
+            <div class="profile-details">
+                <p><label>Full Name</label><span id="profileName">Loading...</span></p>
+                <p><label>Email</label><span id="profileEmail">Loading...</span></p>
+                <p><label>Age</label><span id="profileAge">Loading...</span></p>
+                <p><label>Employment Status</label><span id="profileStatus">Loading...</span></p>
+            </div>
+            <button class="logout-btn-profile" onclick="globalLogout()">Log Out</button>
+        </div>
+    </div>
+    <!-- ======================= -->
 
     <footer>
         <p><strong>Crisis Support:</strong> If you're in immediate danger, please call your local emergency services or crisis hotline.</p>
@@ -199,67 +203,111 @@
     </footer>
 
 <script>
-function globalLogout() {
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('currentUser');
-    window.location.href = 'index.html';
-}
-document.addEventListener('DOMContentLoaded', function() {
-    const authToken = localStorage.getItem('authToken');
-    const navLinks = document.querySelectorAll('nav ul li a');
-    
-    if (authToken) {
-        const navButtonContainer = document.querySelector('.nav-button-container');
-        if (navButtonContainer) {
-            navButtonContainer.innerHTML = '<a href="#" onclick="globalLogout()" class="nav-button login">Log Out</a>';
-        }
+    let currentUser = localStorage.getItem('currentUser') ? JSON.parse(localStorage.getItem('currentUser')) : null;
+
+    function globalLogout() {
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('currentUser');
+        localStorage.removeItem('profileImage');
+        window.location.href = 'index.html';
     }
-    
-    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-    navLinks.forEach(link => {
-        link.classList.remove('active');
-    });
-    navLinks.forEach(link => {
-        let href = link.getAttribute('href');
-        if ((currentPage === '' || currentPage === 'index.html') && 
-            (href === 'index.html' || href === './')) {
-            link.classList.add('active');
-        } else if (href === currentPage) {
-            link.classList.add('active');
+
+    function openProfileModal(event) {
+        if(event) event.preventDefault(); 
+        if (currentUser) {
+            document.getElementById('profileName').textContent = currentUser.name || 'Not Set';
+            document.getElementById('profileEmail').textContent = currentUser.email || 'Not Set';
+            document.getElementById('profileAge').textContent = currentUser.preferences?.age || 'Not Set';
+            document.getElementById('profileStatus').textContent = currentUser.preferences?.employment_status || 'Not Set';
         }
+        const savedImage = localStorage.getItem('profileImage');
+        const preview = document.getElementById('profileImagePreview');
+        if (savedImage) {
+             preview.innerHTML = `<img src="${savedImage}" alt="Profile Photo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+        } else {
+            preview.innerHTML = `<span class="material-symbols-rounded">person</span>`;
+        }
+        document.getElementById('profileModal').classList.add('show');
+    }
+
+    function closeProfileModal() {
+        document.getElementById('profileModal').classList.remove('show');
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const authToken = localStorage.getItem('authToken');
+        const navLinks = document.querySelectorAll('nav ul li a');
+        
+        if (authToken) {
+            const navButtonContainer = document.querySelector('.nav-button-container');
+            if (navButtonContainer) {
+                navButtonContainer.innerHTML = '<a href="#" onclick="openProfileModal(event)" class="nav-button login">Profile</a>';
+            }
+        }
+        
+        const profileImageUpload = document.getElementById('profileImageUpload');
+        if (profileImageUpload) {
+            profileImageUpload.addEventListener('change', function(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const preview = document.getElementById('profileImagePreview');
+                        preview.innerHTML = `<img src="${e.target.result}" alt="Profile Photo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+                        localStorage.setItem('profileImage', e.target.result);
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+        });
+        navLinks.forEach(link => {
+            let href = link.getAttribute('href');
+            if ((currentPage === '' || currentPage === 'index.html') && 
+                (href === 'index.html' || href === './')) {
+                link.classList.add('active');
+            } else if (href === currentPage) {
+                link.classList.add('active');
+            }
+        });
     });
-});
-function openPremiumModal(planType, event) {
-    event.preventDefault(); 
-    document.getElementById('planSelector').value = planType;
-    document.getElementById('premiumModal').classList.add('show');
-}
-function closePremiumModal() {
-    document.getElementById('premiumModal').classList.remove('show');
-}
-function openUpiModal(message) {
-    document.getElementById('upiModalMessage').textContent = message;
-    document.getElementById('upiModal').classList.add('show');
-}
-function closeUpiModal() {
-    document.getElementById('upiModal').classList.remove('show');
-}
-function handlePremiumBooking(event) {
-    event.preventDefault();
-    const upiId = document.getElementById('premiumUpi').value;
-    const plan = document.getElementById('planSelector').value;
-    const amount = (plan === 'monthly') ? '₹99' : '₹999';
-    console.log("Premium Booking Request:", {
-        name: document.getElementById('premiumName').value,
-        phone: document.getElementById('premiumPhone').value,
-        email: document.getElementById('premiumEmail').value,
-        upi: upiId,
-        plan: plan
-    });
-    closePremiumModal();
-    openUpiModal('A payment request for ' + amount + ' has been sent to ' + upiId + '. Please open your UPI app to approve the payment.');
-    document.getElementById('premiumForm').reset();
-}
+
+    // --- Modal Functions ---
+    function openPremiumModal(planType, event) {
+        event.preventDefault(); 
+        document.getElementById('planSelector').value = planType;
+        document.getElementById('premiumModal').classList.add('show');
+    }
+    function closePremiumModal() {
+        document.getElementById('premiumModal').classList.remove('show');
+    }
+    function openUpiModal(message) {
+        document.getElementById('upiModalMessage').textContent = message;
+        document.getElementById('upiModal').classList.add('show');
+    }
+    function closeUpiModal() {
+        document.getElementById('upiModal').classList.remove('show');
+    }
+    function handlePremiumBooking(event) {
+        event.preventDefault();
+        const upiId = document.getElementById('premiumUpi').value;
+        const plan = document.getElementById('planSelector').value;
+        const amount = (plan === 'monthly') ? '₹99' : '₹999';
+        console.log("Premium Booking Request:", {
+            name: document.getElementById('premiumName').value,
+            phone: document.getElementById('premiumPhone').value,
+            email: document.getElementById('premiumEmail').value,
+            upi: upiId,
+            plan: plan
+        });
+        closePremiumModal();
+        openUpiModal('A payment request for ' + amount + ' has been sent to ' + upiId + '. Please open your UPI app to approve the payment.');
+        document.getElementById('premiumForm').reset();
+    }
 </script>
 </body>
 </html>

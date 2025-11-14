@@ -14,6 +14,19 @@ body {
     min-height: 100vh;
 }
 
+:root {
+    --primary: #6366f1;
+    --primary-light: #818cf8;
+    --primary-dark: #4f46e5;
+    --bg-light: #f8f9fb;
+    --bg-white: #ffffff;
+    --text-dark: #1f2937;
+    --text-light: #6b7280;
+    --border: #e5e7eb;
+    --success: #10b981;
+    --error: #ef4444;
+}
+
 /* ============================================
    Navigation
    ============================================ */
@@ -31,12 +44,10 @@ nav ul {
     display: flex;
     flex-wrap: wrap;
     gap: 2rem;
-    /* This aligns links left and buttons right */
     justify-content: space-between;
     align-items: center; 
 }
 
-/* These are the main links: Home, Chatbot, etc. */
 nav ul li a {
     text-decoration: none;
     color: #667eea;
@@ -52,20 +63,17 @@ nav ul li a:hover {
     border-bottom-color: #764ba2;
 }
 
-/* Active Navigation Link */
 nav ul li a.active {
     color: #764ba2;
     border-bottom: 3px solid #667eea;
     font-weight: 700;
 }
 
-/* Container for the new buttons */
 .nav-button-container {
     display: flex;
-    gap: 0.25rem; /* Closer gap */
+    gap: 0.25rem; 
 }
 
-/* Styles for the new buttons */
 .nav-button {
     display: inline-block;
     padding: 0.4rem 1.1rem;
@@ -76,28 +84,28 @@ nav ul li a.active {
     transition: all 0.2s ease;
     border: 2px solid transparent;
     line-height: 1.5;
+    cursor: pointer; 
 }
 
 .nav-button.login {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
     color: white;
-    border-color: #667eea;
+    border-color: #6366f1;
 }
 .nav-button.login:hover {
-    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+    background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
     box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
 }
 
 .nav-button.signup {
     background: rgba(255, 255, 255, 0.9);
     color: #4f46e5;
-    border: 2px solid #667eea;
+    border: 2px solid #6366f1;
 }
 .nav-button.signup:hover {
     background: #ffffff;
 }
 
-/* Hide old .signin-link if it exists */
 nav ul li a.signin-link {
     display: none;
 }
@@ -252,7 +260,156 @@ footer p:last-child {
     margin-top: 1rem;
 }
 
-/* Mobile Responsive */
+/* ============================================
+   MODAL STYLES (Global)
+   ============================================ */
+
+.material-symbols-rounded {
+    font-size: 22px;
+    vertical-align: middle;
+    font-variation-settings:
+      'FILL' 0,
+      'wght' 400,
+      'GRAD' 0,
+      'opsz' 24;
+}
+
+.modal-overlay {
+    display: none; 
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+}
+.modal-overlay.show {
+    display: flex; 
+    opacity: 1;
+}
+.modal-content {
+    background: white;
+    padding: 24px 32px;
+    border-radius: 12px;
+    max-width: 450px;
+    width: 90%;
+    text-align: left; 
+    position: relative;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    animation: modal-fade-in 0.3s ease;
+}
+.modal-close-btn {
+    position: absolute;
+    top: 10px;
+    right: 14px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #6b7280;
+    cursor: pointer;
+}
+.modal-content h3 {
+    font-size: 22px;
+    color: #1f2937;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+@keyframes modal-fade-in {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* Profile Modal Styles */
+.profile-modal {
+    max-width: 500px;
+}
+.profile-picture-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+#profileImagePreview {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background-color: #e5e7eb;
+    color: #6b7280;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    object-fit: cover;
+}
+#profileImagePreview .material-symbols-rounded {
+    font-size: 64px;
+}
+.change-photo-btn {
+    font-family: 'Inter', sans-serif;
+    background: none;
+    border: none;
+    color: #6366f1;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+.profile-details {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+.profile-details p {
+    display: flex;
+    flex-direction: column;
+    font-size: 1rem;
+    margin: 0;
+}
+.profile-details label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+.profile-details span {
+    font-size: 1rem;
+    color: #1f2937;
+    padding: 10px 12px;
+    background-color: #f8f9fb;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    text-transform: capitalize;
+}
+.logout-btn-profile {
+    background: #fee2e2;
+    color: var(--error);
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    width: 100%;
+}
+.logout-btn-profile:hover {
+    background: var(--error);
+    color: white;
+}
+
+
+/* ============================================
+   Mobile Responsive
+   ============================================ */
+
 @media (max-width: 768px) {
     .hero h1 {
         font-size: 2rem;
