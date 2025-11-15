@@ -60,19 +60,22 @@ Emotion Detection: MediaPipe / OpenCV (Simulated in prototype)
 
 The following folder structure is taken exactly from your project:
 
+## 📁 Project Folder Structure
+
+```
 MINDCARE/
 │
 ├── .idea/
 ├── .vscode/
 │
 ├── backend/
-│   ├── .env                 # Environment variables (ignored in GitHub)
+│   ├── .env
 │   ├── .gitignore
-│   ├── app.py               # Flask backend logic
-│   └── requirement.txt      # Python dependencies
+│   ├── app.py
+│   └── requirement.txt
 │
 ├── databse/
-│   └── schema.sql           # MySQL schema
+│   └── schema.sql
 │
 ├── frontend/
 │   ├── css/
@@ -92,6 +95,8 @@ MINDCARE/
 │   └── terms.html
 │
 └── README.md
+```
+
 
 ⚙️ How to Run the Project
 1. Backend Setup
@@ -161,4 +166,5 @@ Kavinraj K
 Krish Agarwal
 
 Manogar G
+
 
