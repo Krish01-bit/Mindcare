@@ -1,52 +1,64 @@
 MindCare – AI-Powered Mental Wellness Platform
 Built for Nallas CodeXcelerate 2025 – Team XP Hunters
 
-MindCare is a mental wellness platform that combines AI-driven emotional understanding, a supportive chatbot, and anonymous community groups to make mental health support accessible, private, and stigma-free for Indian students and young professionals.
+MindCare is a mental wellness platform that uses AI emotion understanding, an empathetic chatbot, and anonymous community support to deliver accessible and stigma-free mental health care for Indian students and young professionals.
 
 🌟 Key Features
 🧠 Emotion Detection (Prototype Simulation)
 
-Detects user emotions like happy, sad, stressed, etc., using on-device AI simulation.
-No images are stored — privacy-first approach.
+Detects user emotions like sad, stressed, happy
+
+On-device simulated detection
+
+No image storage → privacy-first
 
 🤖 AI Mental Health Companion
 
-Powered by Google Gemini API with a fallback Hugging Face model.
-Provides personalized, empathetic responses based on detected emotion and message tone.
+Powered by Google Gemini API
 
-👥 Anonymous Community Groups
+Hugging Face fallback model
 
-Connects users to Indian wellness groups on WhatsApp for real peer support.
+Provides personalized, empathetic responses
 
-👤 User Management
+Adjusts support based on detected emotion
 
-Signup
+👤 Smart User Experience
 
-Login
+Secure signup & login
 
-One-time personal wellness survey
+One-time onboarding survey
 
-Dynamic navigation with login/logout states
+Auto-navigation based on auth state
 
-📊 Mood Tracking Dashboard
+📊 Mood Analytics Dashboard
 
-Shows weekly emotion trends to help users understand their mental patterns.
+Tracks 7-day emotional trends
 
-💊 Doctor Appointment (Prototype)
+Helps users observe their mental patterns
 
-A pop-up modal for booking professional mental health consultations.
+👥 Anonymous Community Support
+
+WhatsApp-based safe spaces
+
+India-focused group categories
+
+💊 Doctor Consultation (Prototype)
+
+Pop-up appointment form
+
+Simulated booking workflow
 
 💻 Tech Stack
 
 Frontend: HTML5, CSS3, JavaScript
 Backend: Python Flask
 Database: MySQL
-AI: Google Gemini API, Hugging Face
-Emotion Detection: MediaPipe/OpenCV (simulated)
+AI Services: Google Gemini API, Hugging Face
+Emotion Detection: MediaPipe / OpenCV (Simulated in prototype)
 
 📁 Project Folder Structure
 
-The following structure is taken exactly from your VS Code workspace:
+The following folder structure is taken exactly from your project:
 
 MINDCARE/
 │
@@ -54,13 +66,13 @@ MINDCARE/
 ├── .vscode/
 │
 ├── backend/
-│   ├── .env                   # API keys & sensitive variables (ignored in GitHub)
+│   ├── .env                 # Environment variables (ignored in GitHub)
 │   ├── .gitignore
-│   ├── app.py                 # Flask backend
-│   └── requirement.txt        # Python dependencies file
+│   ├── app.py               # Flask backend logic
+│   └── requirement.txt      # Python dependencies
 │
 ├── databse/
-│   └── schema.sql             # MySQL database schema
+│   └── schema.sql           # MySQL schema
 │
 ├── frontend/
 │   ├── css/
@@ -81,9 +93,11 @@ MINDCARE/
 │
 └── README.md
 
-
 ⚙️ How to Run the Project
 1. Backend Setup
+
+Open terminal:
+
 cd backend
 pip install -r requirement.txt
 
@@ -99,17 +113,19 @@ GEMINI_API_KEY=your_gemini_key
 HF_API_TOKEN=your_hf_key
 HF_MODEL=mistralai/Mistral-7B-Instruct-v0.1
 
-3. Start the Backend Server
+3. Run the Backend
 python app.py
 
-4. Database Setup
 
-Open MySQL and run:
+Backend runs on:
+
+http://localhost:5000
+
+🗄️ 4. Database Setup (MySQL)
+
+Open MySQL CLI or Workbench and run:
 
 source databse/schema.sql;
-
-
-(Folder name in your project is “databse” — keep it or rename as needed.)
 
 🌐 5. Frontend Setup
 
@@ -118,21 +134,23 @@ Simply open:
 frontend/index.html
 
 
-Or use a local server:
+Or use a lightweight server:
 
 python -m http.server 5500
 
 🚀 Future Enhancements
 
-Real-time MediaPipe-based emotion detection
-
-Wearable device integration
+Full MediaPipe integration
 
 Voice sentiment analysis
 
-Full mobile app (Android/iOS)
+Wearable biosignal support
 
-Professional counselor partnership program
+Mobile app (Flutter/React Native)
+
+College pilot deployment
+
+Integration with licensed professionals
 
 👥 Team – XP Hunters
 
@@ -143,3 +161,4 @@ Kavinraj K
 Krish Agarwal
 
 Manogar G
+
